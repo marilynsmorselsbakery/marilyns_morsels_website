@@ -47,11 +47,12 @@ export default function IngredientLabelModal({
             ×
           </button>
         </div>
-        <div className="overflow-auto max-h-[calc(90vh-80px)] flex justify-center bg-gray-50 p-4">
+        <div className="overflow-auto max-h-[calc(90vh-80px)] bg-white">
           <object
-            data={`${labelUrl}#toolbar=0&navpanes=0`}
+            data={`${labelUrl}#toolbar=0&navpanes=0&zoom=page-fit`}
             type="application/pdf"
-            className="w-full min-h-[600px] border-0"
+            className="w-full border-0"
+            style={{ minHeight: "600px", height: "100%" }}
             title={`${cookieName} Ingredient Label`}
           >
             <p className="text-center py-8 text-morselBrown/70">
