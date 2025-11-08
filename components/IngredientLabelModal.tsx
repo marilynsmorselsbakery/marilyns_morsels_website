@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Image from "next/image";
 
 interface IngredientLabelModalProps {
   isOpen: boolean;
@@ -47,27 +48,15 @@ export default function IngredientLabelModal({
             ×
           </button>
         </div>
-        <div className="overflow-auto max-h-[calc(90vh-80px)] bg-white">
-          <object
-            data={`${labelUrl}#toolbar=0&navpanes=0&zoom=page-fit`}
-            type="application/pdf"
-            className="w-full border-0"
-            style={{ minHeight: "600px", height: "100%" }}
-            title={`${cookieName} Ingredient Label`}
-          >
-            <p className="text-center py-8 text-morselBrown/70">
-              Unable to display PDF.{" "}
-              <a
-                href={labelUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-morselGold hover:underline"
-              >
-                Click here to open in a new tab
-              </a>
-              .
-            </p>
-          </object>
+        <div className="overflow-auto max-h-[calc(90vh-80px)] bg-white flex justify-center">
+          <Image
+            src={labelUrl}
+            alt={`${cookieName} Ingredient Label`}
+            width={800}
+            height={1000}
+            className="w-auto h-auto max-w-full"
+            unoptimized
+          />
         </div>
       </div>
     </div>

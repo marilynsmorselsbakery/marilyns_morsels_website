@@ -7,11 +7,11 @@ import { products } from "@/lib/products";
 
 const ingredientLabels: Record<string, { url: string; name: string }> = {
   chocolate_chip: {
-    url: "/Chocolate Chip Cookie Label.pdf",
+    url: "/chocolate-chip-ingredients-1.png",
     name: "Chocolate Chip Cookie",
   },
   butterscotch_chip: {
-    url: "/Butterscotch Cookie Label.pdf",
+    url: "/butterscotch-ingredients-1.png",
     name: "Butterscotch Chocolate Chip Cookie",
   },
 };
