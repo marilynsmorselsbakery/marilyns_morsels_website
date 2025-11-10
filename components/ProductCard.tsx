@@ -58,7 +58,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
       )}
       <div className="mb-4 flex-1">
         {/* Product image */}
-        <div className="w-full h-48 relative rounded-xl mb-4 overflow-hidden bg-gradient-to-br from-morselGoldLight/20 to-morselGold/10 group">
+        <div className="w-full h-48 relative rounded-xl mb-4 overflow-hidden bg-gradient-to-br from-morselGoldLight/20 to-morselGold/10">
           <Image
             src={productImage}
             alt={product.name}
@@ -66,30 +66,6 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
             className="object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          {onInfoClick && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onInfoClick();
-              }}
-              className="absolute top-2 right-2 w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 hover:scale-110"
-              aria-label="View product details"
-            >
-              <svg
-                className="w-5 h-5 text-morselCocoa"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </button>
-          )}
         </div>
         <h3 className="text-base font-display font-semibold mb-2 text-morselCocoa">
           {product.name}
@@ -100,12 +76,25 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
         <div className="text-xl font-display font-bold text-morselCocoa">
           ${(product.priceCents / 100).toFixed(2)}
         </div>
-        <button
-          onClick={handleCheckout}
-          className="px-5 py-2.5 text-sm font-semibold rounded-full bg-morselCocoa text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] transition-all duration-200"
-        >
-          Buy Now
-        </button>
+        <div className="flex gap-2">
+          {onInfoClick && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onInfoClick();
+              }}
+              className="px-5 py-2.5 text-sm font-semibold rounded-full border-2 border-morselGold/40 text-morselBrown hover:border-morselGold hover:text-morselGold hover:bg-morselGold/10 transition-all duration-200 hover:scale-[1.02]"
+            >
+              Details
+            </button>
+          )}
+          <button
+            onClick={handleCheckout}
+            className="px-5 py-2.5 text-sm font-semibold rounded-full bg-morselCocoa text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] transition-all duration-200"
+          >
+            Buy Now
+          </button>
+        </div>
       </div>
     </div>
   );
