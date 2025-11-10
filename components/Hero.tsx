@@ -44,11 +44,11 @@ export default function Hero() {
               priority
             />
           </div>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight mb-6 text-white drop-shadow-lg">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight mb-6 text-white drop-shadow-lg [text-shadow:0_2px_8px_rgba(0,0,0,0.3)]">
             Small-batch cookies,{" "}
-            <span className="text-morselGoldLight">still warm in spirit.</span>
+            <span className="text-morselGoldLight [text-shadow:0_2px_8px_rgba(0,0,0,0.4)]">still warm in spirit.</span>
           </h1>
-          <p className="text-lg md:text-xl text-white/95 mb-8 font-body max-w-xl drop-shadow-md">
+          <p className="text-lg md:text-xl text-white/95 mb-8 font-body max-w-xl drop-shadow-md [text-shadow:0_1px_4px_rgba(0,0,0,0.3)]">
             Baked fresh in a licensed home kitchen with real butter, premium chocolate, and zero shortcuts.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
