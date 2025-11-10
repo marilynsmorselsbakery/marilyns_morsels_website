@@ -2,92 +2,144 @@
 
 import { useState } from "react";
 import ProductCard from "@/components/ProductCard";
-import IngredientLabelModal from "@/components/IngredientLabelModal";
-import { products } from "@/lib/products";
+import ProductDetailModal from "@/components/ProductDetailModal";
+import { products, ProductOption } from "@/lib/products";
 
-const ingredientLabels: Record<string, { url: string; name: string }> = {
-  chocolate_chip: {
-    url: "/chocolate-chip-ingredients-1.png",
-    name: "Chocolate Chip Cookie",
-  },
-  butterscotch_chip: {
-    url: "/butterscotch-ingredients-1.png",
-    name: "Butterscotch Chocolate Chip Cookie",
-  },
+const getFlavorDisplayName = (flavor: string) => {
+  switch (flavor) {
+    case "chocolate_chip":
+      return "Chocolate Chip";
+    case "butterscotch_chip":
+      return "Butterscotch Chocolate Chip";
+    case "half_half":
+      return "Half & Half";
+    default:
+      return flavor;
+  }
 };
 
 export default function ShopPage() {
-  const [modalState, setModalState] = useState<{
-    isOpen: boolean;
-    labelUrl: string;
-    cookieName: string;
-  }>({
-    isOpen: false,
-    labelUrl: "",
-    cookieName: "",
-  });
+  const [selectedProduct, setSelectedProduct] = useState<ProductOption | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = (flavor: string) => {
-    const label = ingredientLabels[flavor];
-    if (label) {
-      setModalState({
-        isOpen: true,
-        labelUrl: label.url,
-        cookieName: label.name,
-      });
-    }
+  const openProductModal = (product: ProductOption) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setModalState({ isOpen: false, labelUrl: "", cookieName: "" });
+    setIsModalOpen(false);
+    setSelectedProduct(null);
   };
 
-  // Get unique flavors from products
-  const uniqueFlavors = Array.from(
-    new Set(products.map((p) => p.flavor).filter((f) => f !== "half_half"))
-  );
+  const handleBuyNow = async (product: ProductOption) => {
+    const res = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productId: product.id, quantity: 1 }),
+    });
+
+    if (!res.ok) {
+      alert("Something went wrong starting checkout. Try again.");
+      return;
+    }
+
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    }
+  };
+
+  // Group products by flavor
+  const chocolateChipProducts = products.filter((p) => p.flavor === "chocolate_chip");
+  const butterscotchProducts = products.filter((p) => p.flavor === "butterscotch_chip");
+  const halfHalfProducts = products.filter((p) => p.flavor === "half_half");
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-10 mt-16">
       <h1 className="text-4xl md:text-5xl font-display font-bold text-morselCocoa mb-3">
         Shop Cookies
       </h1>
-      <p className="text-lg text-morselBrown/70 mb-8">
+      <p className="text-lg text-morselBrown/70 mb-12">
         Baked to order in small batches. Please allow a short lead time for freshness.
       </p>
 
-      <div className="mb-8 pb-6 border-b border-morselGold/20">
-        <h2 className="text-lg font-display font-semibold mb-4 text-morselCocoa">
-          View Ingredient Labels
-        </h2>
-        <div className="flex flex-wrap gap-3">
-          {uniqueFlavors.map((flavor) => {
-            const label = ingredientLabels[flavor];
-            if (!label) return null;
-            return (
-              <button
-                key={flavor}
-                onClick={() => openModal(flavor)}
-                className="px-5 py-2.5 text-sm rounded-full border-2 border-morselBrown/40 text-morselBrown hover:border-morselGold hover:text-morselGold hover:bg-morselGold/10 transition-all duration-200 hover:scale-[1.02]"
-              >
-                View {label.name} Ingredients
-              </button>
-            );
-          })}
+      {/* Chocolate Chip Section */}
+      <div className="mb-12">
+        <div className="mb-6 pb-3 border-b-2 border-morselGold/30">
+          <h2 className="text-2xl md:text-3xl font-display font-bold text-morselCocoa">
+            {getFlavorDisplayName("chocolate_chip")}
+          </h2>
+          <p className="text-morselBrown/70 mt-2">
+            Classic, buttery chocolate chip morsels baked to perfection.
+          </p>
+        </div>
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-2">
+          {chocolateChipProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onInfoClick={() => openProductModal(product)}
+            />
+          ))}
         </div>
       </div>
 
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+      {/* Butterscotch Chocolate Chip Section */}
+      <div className="mb-12">
+        <div className="mb-6 pb-3 border-b-2 border-morselGold/30">
+          <h2 className="text-2xl md:text-3xl font-display font-bold text-morselCocoa">
+            {getFlavorDisplayName("butterscotch_chip")}
+          </h2>
+          <p className="text-morselBrown/70 mt-2">
+            Rich butterscotch & chocolate with caramelized edges.
+          </p>
+        </div>
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-2">
+          {butterscotchProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onInfoClick={() => openProductModal(product)}
+            />
+          ))}
+        </div>
       </div>
 
-      <IngredientLabelModal
-        isOpen={modalState.isOpen}
+      {/* Half & Half Section */}
+      <div className="mb-12">
+        <div className="mb-6 pb-3 border-b-2 border-morselGold/30">
+          <h2 className="text-2xl md:text-3xl font-display font-bold text-morselCocoa">
+            {getFlavorDisplayName("half_half")}
+          </h2>
+          <p className="text-morselBrown/70 mt-2">
+            The best of both worlds - a mix of chocolate chip and butterscotch chocolate chip.
+          </p>
+        </div>
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-2">
+          {halfHalfProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onInfoClick={() => openProductModal(product)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Product Detail Modal */}
+      <ProductDetailModal
+        isOpen={isModalOpen}
         onClose={closeModal}
-        labelUrl={modalState.labelUrl}
-        cookieName={modalState.cookieName}
+        product={selectedProduct}
+        onBuyNow={
+          selectedProduct
+            ? () => {
+                closeModal();
+                handleBuyNow(selectedProduct);
+              }
+            : undefined
+        }
       />
     </section>
   );

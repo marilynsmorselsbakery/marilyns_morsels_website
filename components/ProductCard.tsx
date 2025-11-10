@@ -2,13 +2,31 @@
 
 import { ProductOption } from "@/lib/products";
 import Link from "next/link";
+import Image from "next/image";
+import chipsBowl from "@/assets/chips_bowl.png";
+import sixCookie from "@/assets/six_cookie.png";
+import freshDozen from "@/assets/fresh_dozen.png";
+import plateDisplay from "@/assets/plate_display.png";
+import cookieSpread from "@/assets/cookie_spread.png";
+import milkStack from "@/assets/milk_stack.png";
+
+// Map products to images arbitrarily
+const productImageMap: Record<string, any> = {
+  "cc-6": chipsBowl,
+  "cc-12": freshDozen,
+  "bc-6": sixCookie,
+  "bc-12": plateDisplay,
+  "hh-6": cookieSpread,
+  "hh-12": milkStack,
+};
 
 interface ProductCardProps {
   product: ProductOption;
   tag?: string;
+  onInfoClick?: () => void;
 }
 
-export default function ProductCard({ product, tag }: ProductCardProps) {
+export default function ProductCard({ product, tag, onInfoClick }: ProductCardProps) {
   const handleCheckout = async () => {
     const res = await fetch("/api/checkout", {
       method: "POST",
@@ -27,6 +45,8 @@ export default function ProductCard({ product, tag }: ProductCardProps) {
     }
   };
 
+  const productImage = productImageMap[product.id] || chipsBowl;
+
   return (
     <div className="bg-white rounded-2xl shadow-card border border-morselGold/10 p-6 flex flex-col hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200">
       {tag && (
@@ -37,9 +57,39 @@ export default function ProductCard({ product, tag }: ProductCardProps) {
         </div>
       )}
       <div className="mb-4 flex-1">
-        {/* Product image placeholder */}
-        <div className="w-full h-48 bg-gradient-to-br from-morselGoldLight/20 to-morselGold/10 rounded-xl mb-4 flex items-center justify-center">
-          <p className="text-xs text-morselBrown/30">Product photo</p>
+        {/* Product image */}
+        <div className="w-full h-48 relative rounded-xl mb-4 overflow-hidden bg-gradient-to-br from-morselGoldLight/20 to-morselGold/10 group">
+          <Image
+            src={productImage}
+            alt={product.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+          {onInfoClick && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onInfoClick();
+              }}
+              className="absolute top-2 right-2 w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 hover:scale-110"
+              aria-label="View product details"
+            >
+              <svg
+                className="w-5 h-5 text-morselCocoa"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </button>
+          )}
         </div>
         <h3 className="text-base font-display font-semibold mb-2 text-morselCocoa">
           {product.name}

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import logoSquare from "@/assets/clear-logo-square.png";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -23,8 +25,18 @@ export default function Navbar() {
       }`}
     >
       <nav className="max-w-6xl mx-auto flex items-center justify-between py-4 px-4">
-        <Link href="/" className="text-xl font-display font-semibold tracking-tight">
-          Marilyn&apos;s <span className="text-morselGold">Morsels</span>
+        <Link href="/" className="flex items-center gap-2">
+          <Image
+            src={logoSquare}
+            alt="Marilyn's Morsels"
+            width={40}
+            height={40}
+            className="h-8 w-8 md:h-10 md:w-10"
+            priority
+          />
+          <span className="text-xl font-display font-semibold tracking-tight">
+            Marilyn&apos;s <span className="text-morselGold">Morsels</span>
+          </span>
         </Link>
         <div className="flex gap-6 text-sm">
           <Link href="/shop" className="hover:text-morselGold transition-colors duration-150">

@@ -1,7 +1,44 @@
+"use client";
+
+import Image from "next/image";
+import { useParallax } from "@/hooks/useParallax";
+import plateStack from "@/assets/plate_stack.png";
+
 export default function WhyMarilyn() {
+  const parallaxOffset1 = useParallax({ speed: 0.2 });
+  const parallaxOffset2 = useParallax({ speed: 0.15 });
+
   return (
-    <section className="bg-morselCream py-20">
-      <div className="max-w-4xl mx-auto px-4">
+    <section className="relative bg-morselCream py-20 overflow-hidden">
+      {/* Decorative background images with parallax */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute top-20 -right-20 w-64 h-64 opacity-10"
+          style={{ transform: `translateY(${parallaxOffset1}px)` }}
+        >
+          <Image
+            src={plateStack}
+            alt=""
+            fill
+            className="object-contain"
+            aria-hidden="true"
+          />
+        </div>
+        <div
+          className="absolute bottom-20 -left-20 w-56 h-56 opacity-10"
+          style={{ transform: `translateY(${parallaxOffset2}px)` }}
+        >
+          <Image
+            src={plateStack}
+            alt=""
+            fill
+            className="object-contain rotate-180"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+
+      <div className="relative max-w-4xl mx-auto px-4 z-10">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-display font-bold text-morselCocoa mb-6">
             Why Marilyn&apos;s Morsels

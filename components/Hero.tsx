@@ -2,25 +2,48 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useParallax } from "@/hooks/useParallax";
+import heroBg from "@/assets/cookie-stack-lean.jpg";
+import clearLogo from "@/assets/clear-logo.png";
 
 export default function Hero() {
+  const parallaxOffset = useParallax({ speed: 0.3 });
+
   return (
     <section className="relative h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden mt-16">
       {/* Background image with overlay */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-morselCream via-morselCream/95 to-morselCream/90 z-10" />
-        <div className="absolute inset-0 bg-black/30 z-10" />
-        {/* Placeholder for cookie image - replace with actual photo */}
-        <div className="w-full h-full bg-gradient-to-br from-morselGoldLight/20 via-morselCream to-morselGold/10" />
-        {/* Temporary placeholder text - remove when image is added */}
-        <div className="absolute inset-0 flex items-center justify-center z-0">
-          <p className="text-morselBrown/20 text-sm">Cookie photography placeholder</p>
+        <div
+          className="absolute inset-0 w-full h-[120%]"
+          style={{ transform: `translateY(${parallaxOffset}px)` }}
+        >
+          <Image
+            src={heroBg}
+            alt="Fresh baked cookies"
+            fill
+            className="object-cover"
+            priority
+            quality={90}
+          />
         </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-morselCream/60 via-morselCream/70 to-morselCream/80 z-10" />
+        <div className="absolute inset-0 bg-black/20 z-10" />
       </div>
 
       {/* Content */}
       <div className="relative z-20 max-w-6xl mx-auto px-4 w-full">
         <div className="max-w-2xl">
+          {/* Large Logo */}
+          <div className="mb-8 flex justify-center md:justify-start">
+            <Image
+              src={clearLogo}
+              alt="Marilyn's Morsels"
+              width={400}
+              height={200}
+              className="w-64 md:w-80 lg:w-96 h-auto drop-shadow-2xl"
+              priority
+            />
+          </div>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight mb-6 text-white drop-shadow-lg">
             Small-batch cookies,{" "}
             <span className="text-morselGoldLight">still warm in spirit.</span>
