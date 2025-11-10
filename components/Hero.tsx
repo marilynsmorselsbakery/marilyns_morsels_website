@@ -10,7 +10,7 @@ export default function Hero() {
   const parallaxOffset = useParallax({ speed: 0.3 });
 
   return (
-    <section className="relative h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[85vh] min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden">
       {/* Background image with overlay */}
       <div className="absolute inset-0 z-0">
         <div
@@ -34,13 +34,13 @@ export default function Hero() {
       <div className="relative z-20 max-w-6xl mx-auto px-4 w-full">
         <div className="max-w-2xl">
           {/* Large Logo */}
-          <div className="mb-8 flex justify-center md:justify-start">
+          <div className="mb-6 md:mb-8 flex justify-center md:justify-start px-2">
             <Image
               src={clearLogo}
               alt="Marilyn's Morsels"
               width={400}
               height={200}
-              className="w-64 md:w-80 lg:w-96 h-auto drop-shadow-2xl"
+              className="w-48 sm:w-56 md:w-80 lg:w-96 h-auto drop-shadow-2xl max-w-full"
               priority
             />
           </div>

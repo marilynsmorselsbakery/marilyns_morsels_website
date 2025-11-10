@@ -61,16 +61,16 @@ export default function Navbar() {
         }`}
       >
         <nav className="max-w-6xl mx-auto flex items-center justify-between py-4 px-4">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 md:gap-3">
             <Image
               src={logoSquare}
               alt="Marilyn's Morsels"
-              width={56}
-              height={56}
-              className="h-10 w-10 md:h-14 md:w-14"
+              width={64}
+              height={64}
+              className="h-12 w-12 md:h-16 md:w-16"
               priority
             />
-            <span className="text-xl md:text-2xl font-display font-semibold tracking-tight">
+            <span className="text-2xl md:text-3xl font-display font-semibold tracking-tight">
               Marilyn&apos;s <span className="text-morselGold">Morsels</span>
             </span>
           </Link>
