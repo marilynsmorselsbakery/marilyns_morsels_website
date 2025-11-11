@@ -38,7 +38,7 @@ export default function ShopPage() {
   const halfHalfProducts = products.filter((p) => p.flavor === "half_half");
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-10 mt-16">
+    <section className="max-w-6xl mx-auto px-4 pt-28 pb-16 md:pt-32 md:pb-20">
       <h1 className="text-4xl md:text-5xl font-display font-bold text-morselCocoa mb-3">
         Shop Cookies
       </h1>

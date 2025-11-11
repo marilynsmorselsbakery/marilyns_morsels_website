@@ -24,7 +24,7 @@ export default async function AccountPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-16">
+    <div className="mx-auto w-full max-w-4xl px-4 pt-28 pb-16 md:pt-32 md:pb-20">
       <ProfileForm email={user.email ?? ""} initialProfile={profile ?? null} />
       
       <section className="mt-6 rounded-lg border border-morselGold/30 bg-white/90 p-8 shadow-sm">
