@@ -15,7 +15,7 @@ export const metadata = {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   // Use getUser() for secure authentication check (getSession() is insecure)
   // We'll pass null as initialSession and let client-side onAuthStateChange handle the session
-  const supabase = createSupabaseServerComponentClient();
+  const supabase = await createSupabaseServerComponentClient();
   await supabase.auth.getUser(); // Verify auth but don't use the result for session
 
   return (

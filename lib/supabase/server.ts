@@ -28,8 +28,8 @@ const getSupabaseServiceRoleKey = () => {
   return serviceRoleKey;
 };
 
-const createServerSupabaseClient = () => {
-  const cookieStore = cookies();
+const createServerSupabaseClient = async () => {
+  const cookieStore = await cookies();
   return createServerClient<Database>(getSupabaseUrl(), getSupabaseAnonKey(), {
     cookies: {
       getAll() {
@@ -39,13 +39,13 @@ const createServerSupabaseClient = () => {
   });
 };
 
-export const createSupabaseServerComponentClient = (): SupabaseClient<Database> =>
+export const createSupabaseServerComponentClient = async (): Promise<SupabaseClient<Database>> =>
   createServerSupabaseClient();
 
-export const createSupabaseServerActionClient = (): SupabaseClient<Database> =>
+export const createSupabaseServerActionClient = async (): Promise<SupabaseClient<Database>> =>
   createServerSupabaseClient();
 
-export const createSupabaseRouteHandlerClient = (): SupabaseClient<Database> =>
+export const createSupabaseRouteHandlerClient = async (): Promise<SupabaseClient<Database>> =>
   createServerSupabaseClient();
 
 export const createSupabaseServiceRoleClient = (): SupabaseClient<Database> =>

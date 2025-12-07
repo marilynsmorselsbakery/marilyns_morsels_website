@@ -39,7 +39,7 @@ const sanitizePayload = (data: unknown): ProfilePayload => {
 };
 
 export async function GET() {
-  const supabase = createSupabaseRouteHandlerClient();
+  const supabase = await createSupabaseRouteHandlerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -63,7 +63,7 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
-  const supabase = createSupabaseRouteHandlerClient();
+  const supabase = await createSupabaseRouteHandlerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

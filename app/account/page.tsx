@@ -4,7 +4,7 @@ import { createSupabaseServerComponentClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/types";
 
 export default async function AccountPage() {
-  const supabase = createSupabaseServerComponentClient();
+  const supabase = await createSupabaseServerComponentClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
