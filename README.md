@@ -21,8 +21,8 @@ Create `.env.local` with:
 STRIPE_SECRET_KEY=sk_test_or_live_key
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-public-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+SUPABASE_SECRET_KEY=your-secret-key
 ```
 
 ### Stripe Configuration
@@ -31,8 +31,10 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 3. Checkout sessions redirect to `/success` or `/cancel`.
 
 ### Supabase Setup
-Run the following SQL in Supabase to create the profile table that stores customer details and the Stripe linkage:
+Run the following SQL in Supabase to create the profiles and orders tables:
+
 ```sql
+-- Create profiles table
 create table if not exists profiles (
   id uuid primary key references auth.users on delete cascade,
   full_name text,
@@ -59,6 +61,24 @@ create policy "Users can upsert own profile"
 create policy "Users can update own profile"
   on profiles for update
   using ((select auth.uid()) = id);
+
+-- Create orders table
+create table if not exists orders (
+  id text primary key,
+  supabase_user_id uuid references auth.users(id) on delete set null,
+  product_ids text,
+  amount_total bigint,
+  currency text,
+  payment_status text,
+  stripe_customer_id text,
+  created_at timestamptz default now()
+);
+
+alter table orders enable row level security;
+
+create policy "Users can read own orders"
+  on orders for select
+  using ((select auth.uid()) = supabase_user_id);
 ```
 
 ### Bulk Inquiries
