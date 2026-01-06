@@ -25,6 +25,8 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 SUPABASE_SECRET_KEY=your-secret-key
 ```
 
+Note: The code uses `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (new format). Supabase is migrating away from anon keys to publishable keys. See [Supabase API Keys discussion](https://github.com/orgs/supabase/discussions/29260) for details.
+
 ### Stripe Configuration
 1. Create Products/Prices in Stripe for each pack (IDs must match `lib/products.ts`).
 2. Use test mode keys while developing.
