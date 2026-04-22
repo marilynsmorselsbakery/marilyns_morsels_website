@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { ProductOption } from "@/lib/products";
+import { getFlavorLabel, getPackSizeDisplay } from "@/lib/flavors";
 import { useCart } from "./CartProvider";
 import QuantitySelector from "./QuantitySelector";
 import chipsBowl from "@/assets/chips_bowl.png";
@@ -60,7 +61,7 @@ export default function ProductDetailModal({
 
   const handleAddToCart = () => {
     if (!product) return;
-    addItem(product.id, quantity);
+    addItem(product, quantity);
     toast.success(`${quantity} ${product.name}${quantity > 1 ? "s" : ""} added to cart`);
     setQuantity(1);
     onClose();
@@ -73,19 +74,9 @@ export default function ProductDetailModal({
     product.flavor !== "half_half"
       ? ingredientLabels[product.flavor]
       : null;
-
-  const getFlavorDisplayName = (flavor: string) => {
-    switch (flavor) {
-      case "chocolate_chip":
-        return "Chocolate Chip";
-      case "butterscotch_chip":
-        return "Butterscotch Chocolate Chip";
-      case "half_half":
-        return "Half & Half";
-      default:
-        return flavor;
-    }
-  };
+  const packSizeDisplay = getPackSizeDisplay(product.packSize, product.category);
+  const aboutLabel =
+    product.category === "dough" ? "About This Dough" : "About This Cookie";
 
   return (
     <div
@@ -103,7 +94,7 @@ export default function ProductDetailModal({
               {product.name}
             </h2>
             <p className="text-sm text-morselBrown/70 mt-1">
-              {getFlavorDisplayName(product.flavor)}
+              {getFlavorLabel(product.flavor)}
             </p>
           </div>
           <button
@@ -132,16 +123,18 @@ export default function ProductDetailModal({
             {/* Product Details */}
             <div className="mb-6">
               <h3 className="text-xl font-display font-semibold text-morselCocoa mb-3">
-                About This Cookie
+                {aboutLabel}
               </h3>
               <p className="text-morselBrown/80 leading-relaxed mb-4">
                 {product.description}
               </p>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="bg-morselCream/50 rounded-lg p-5 border border-morselGold/20 shadow-lg shadow-morselGold/20">
-                  <p className="text-sm text-morselBrown/70 mb-2 font-medium">Pack Size</p>
+                  <p className="text-sm text-morselBrown/70 mb-2 font-medium">
+                    {packSizeDisplay.label}
+                  </p>
                   <p className="text-2xl font-bold text-morselCocoa">
-                    {product.packSize} Cookies
+                    {packSizeDisplay.value}
                   </p>
                 </div>
                 <div className="bg-morselCream/50 rounded-lg p-5 border border-morselGold/20 shadow-lg shadow-morselGold/20">

@@ -1,16 +1,15 @@
 import ProductCard from "@/components/ProductCard";
-import { products } from "@/lib/products";
+import { getProducts } from "@/lib/products";
 import Link from "next/link";
 
-export default function BestSellers() {
-  // Show the 6-pack chocolate chip, 12-pack half & half, and 12-pack butterscotch
-  const featured = [
-    products.find((p) => p.id === "cc-6"),
-    products.find((p) => p.id === "hh-12"),
-    products.find((p) => p.id === "bc-12"),
-  ].filter(Boolean) as typeof products;
+const FEATURED_SLUGS = ["cc-6", "hh-12", "bc-12"];
+const FEATURED_TAGS = ["Best-seller", "Marilyn's Favorite", "Rising Star"];
 
-  const tags = ["Best-seller", "Marilyn's Favorite", "Rising Star"];
+export default async function BestSellers() {
+  const products = await getProducts();
+  const featured = FEATURED_SLUGS.map((slug) =>
+    products.find((p) => p.id === slug)
+  ).filter((p): p is NonNullable<typeof p> => p !== undefined);
 
   return (
     <section className="bg-white py-20">
@@ -25,7 +24,11 @@ export default function BestSellers() {
         </div>
         <div className="grid gap-6 grid-cols-1 md:grid-cols-3 mb-10">
           {featured.map((product, index) => (
-            <ProductCard key={product.id} product={product} tag={tags[index]} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              tag={FEATURED_TAGS[index]}
+            />
           ))}
         </div>
         <div className="text-center">
@@ -40,4 +43,3 @@ export default function BestSellers() {
     </section>
   );
 }
-

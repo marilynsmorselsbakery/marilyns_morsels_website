@@ -37,7 +37,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
   const { addItem } = useCart();
 
   const handleAddToCart = () => {
-    addItem(product.id, quantity);
+    addItem(product, quantity);
     toast.success(`${quantity} ${product.name}${quantity > 1 ? "s" : ""} added to cart`);
     setQuantity(1);
   };

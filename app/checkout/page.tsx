@@ -6,7 +6,6 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { useCart } from "@/components/CartProvider";
 import { useSupabaseSession } from "@/components/SupabaseSessionProvider";
-import { getProductById } from "@/lib/products";
 import chipsBowl from "@/assets/chips_bowl.png";
 import sixCookie from "@/assets/six_cookie.png";
 import freshDozen from "@/assets/fresh_dozen.png";
@@ -88,9 +87,6 @@ export default function CheckoutPage() {
       <div className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-4">
           {items.map((item) => {
-            const product = getProductById(item.productId);
-            if (!product) return null;
-
             const image = productImageMap[item.productId] || chipsBowl;
 
             return (
@@ -101,15 +97,15 @@ export default function CheckoutPage() {
                 <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-gradient-to-br from-morselGoldLight/20 to-morselGold/10">
                   <Image
                     src={image}
-                    alt={product.name}
+                    alt={item.name}
                     fill
                     className="object-cover"
                     sizes="96px"
                   />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-morselCocoa mb-1">{product.name}</h3>
-                  <p className="text-sm text-morselBrown/70 mb-2">{product.description}</p>
+                  <h3 className="font-semibold text-morselCocoa mb-1">{item.name}</h3>
+                  <p className="text-sm text-morselBrown/70 mb-2">{item.description}</p>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-morselBrown/70">Quantity: {item.quantity}</span>
                     <span className="font-semibold text-morselCocoa">

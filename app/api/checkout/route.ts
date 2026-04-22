@@ -1,18 +1,11 @@
-import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
-import { getProductById } from "@/lib/products";
+import { getStripe } from "@/lib/stripe";
+import { getProducts } from "@/lib/products";
 import {
   createSupabaseRouteHandlerClient,
   createSupabaseServiceRoleClient,
 } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/types";
-
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-const stripe = stripeSecretKey
-  ? new Stripe(stripeSecretKey, {
-      apiVersion: "2025-11-17.clover" as Stripe.LatestApiVersion,
-    })
-  : null;
 
 const DOMAIN = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -24,10 +17,7 @@ type CartItem = {
 
 export async function POST(request: NextRequest) {
   try {
-    if (!stripe) {
-      console.error("Stripe secret key is not configured");
-      return NextResponse.json({ error: "Stripe not configured" }, { status: 500 });
-    }
+    const stripe = getStripe();
 
     const supabase = await createSupabaseRouteHandlerClient();
     const {
@@ -131,9 +121,12 @@ export async function POST(request: NextRequest) {
       profile = updatedProfile;
     }
 
+    const allProducts = await getProducts();
+    const productMap = new Map(allProducts.map((p) => [p.id, p]));
+
     const lineItems = items
       .map((item) => {
-        const product = getProductById(item.productId);
+        const product = productMap.get(item.productId);
         if (!product || item.quantity < 1) {
           return null;
         }

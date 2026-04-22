@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { useCart } from "./CartProvider";
-import { getProductById } from "@/lib/products";
 import chipsBowl from "@/assets/chips_bowl.png";
 import sixCookie from "@/assets/six_cookie.png";
 import freshDozen from "@/assets/fresh_dozen.png";
@@ -105,9 +104,6 @@ export default function CartDrawer({ isOpen, onClose, onCheckout }: Props) {
           ) : (
             <div className="space-y-4">
               {items.map((item) => {
-                const product = getProductById(item.productId);
-                if (!product) return null;
-
                 const image = productImageMap[item.productId] || chipsBowl;
 
                 return (
@@ -118,7 +114,7 @@ export default function CartDrawer({ isOpen, onClose, onCheckout }: Props) {
                     <div className="relative w-20 h-20 flex-shrink-0 rounded-md overflow-hidden bg-gradient-to-br from-morselGoldLight/20 to-morselGold/10">
                       <Image
                         src={image}
-                        alt={product.name}
+                        alt={item.name}
                         fill
                         className="object-cover"
                         sizes="80px"
@@ -126,7 +122,7 @@ export default function CartDrawer({ isOpen, onClose, onCheckout }: Props) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-morselCocoa mb-1 truncate">
-                        {product.name}
+                        {item.name}
                       </h3>
                       <p className="text-sm text-morselBrown/70 mb-2">
                         ${((item.priceCents * item.quantity) / 100).toFixed(2)}
