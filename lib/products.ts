@@ -46,12 +46,17 @@ function sortProducts(products: ProductOption[]): ProductOption[] {
 }
 
 async function fetchProductsFromStripe(): Promise<ProductOption[]> {
-  const stripe = getStripe();
-
-  const [productsResp, pricesResp] = await Promise.all([
-    stripe.products.list({ active: true, limit: 100 }),
-    stripe.prices.list({ active: true, limit: 100 }),
-  ]);
+  let productsResp, pricesResp;
+  try {
+    const stripe = getStripe();
+    [productsResp, pricesResp] = await Promise.all([
+      stripe.products.list({ active: true, limit: 100 }),
+      stripe.prices.list({ active: true, limit: 100 }),
+    ]);
+  } catch (error) {
+    console.error("[lib/products] Stripe fetch failed:", error);
+    throw error;
+  }
 
   const priceByProduct = new Map<string, Stripe.Price>();
   for (const price of pricesResp.data) {
@@ -91,7 +96,7 @@ async function fetchProductsFromStripe(): Promise<ProductOption[]> {
 
 export const getProducts = unstable_cache(
   fetchProductsFromStripe,
-  ["stripe-products"],
+  ["stripe-products-v2"],
   { revalidate: 3600, tags: ["products"] }
 );
 
