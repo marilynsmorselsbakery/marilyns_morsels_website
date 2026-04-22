@@ -18,6 +18,11 @@ import cookieStackLean from "@/assets/cookie-stack-lean.jpg";
  *   bc-dough-pint, bc-dough-quart                  (dough — placeholder)
  *   pbcup-6, pbcup-12                              (cookies — placeholder)
  *   pbcup-dough-pint, pbcup-dough-quart            (dough — placeholder)
+ *
+ * Candidate images from client (2026-04-22):
+ *   assets/new-cookie/ — 10 HEIC files from iOS (needs conversion to jpg/webp
+ *   before Next.js can use them). Quality is not great per MBC; awaiting better
+ *   shots from Marilyn before wiring them into the mapping above.
  */
 const PRODUCT_IMAGES: Record<string, StaticImageData> = {
   "cc-6": plateStack,
