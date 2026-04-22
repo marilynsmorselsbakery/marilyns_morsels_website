@@ -6,21 +6,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { useCart } from "@/components/CartProvider";
 import { useSupabaseSession } from "@/components/SupabaseSessionProvider";
-import chipsBowl from "@/assets/chips_bowl.png";
-import sixCookie from "@/assets/six_cookie.png";
-import freshDozen from "@/assets/fresh_dozen.png";
-import milkStack from "@/assets/milk_stack.png";
-import plateStack from "@/assets/plate_stack.png";
-import cookieStackLean from "@/assets/cookie-stack-lean.jpg";
-
-const productImageMap: Record<string, any> = {
-  "cc-6": plateStack,
-  "cc-12": cookieStackLean,
-  "bc-6": milkStack,
-  "bc-12": chipsBowl,
-  "hh-6": sixCookie,
-  "hh-12": freshDozen,
-};
+import { getProductImage } from "@/lib/product-images";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -87,7 +73,7 @@ export default function CheckoutPage() {
       <div className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-4">
           {items.map((item) => {
-            const image = productImageMap[item.productId] || chipsBowl;
+            const image = getProductImage(item.productId);
 
             return (
               <div

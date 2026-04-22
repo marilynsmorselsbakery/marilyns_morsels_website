@@ -7,24 +7,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { useCart } from "./CartProvider";
 import QuantitySelector from "./QuantitySelector";
-import chipsBowl from "@/assets/chips_bowl.png";
-import sixCookie from "@/assets/six_cookie.png";
-import freshDozen from "@/assets/fresh_dozen.png";
-import plateDisplay from "@/assets/plate_display.png";
-import cookieSpread from "@/assets/cookie_spread.png";
-import milkStack from "@/assets/milk_stack.png";
-import plateStack from "@/assets/plate_stack.png";
-import cookieStackLean from "@/assets/cookie-stack-lean.jpg";
-
-// Map products to images
-const productImageMap: Record<string, any> = {
-  "cc-6": plateStack, // Chocolate Chip 6-pack
-  "cc-12": cookieStackLean, // Chocolate Chip 12-pack
-  "bc-6": milkStack, // Butterscotch 6-pack
-  "bc-12": chipsBowl, // Butterscotch 12-pack
-  "hh-6": sixCookie, // Half & Half 6-pack
-  "hh-12": freshDozen, // Half & Half 12-pack
-};
+import { getProductImage } from "@/lib/product-images";
 
 interface ProductCardProps {
   product: ProductOption;
@@ -42,7 +25,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
     setQuantity(1);
   };
 
-  const productImage = productImageMap[product.id] || chipsBowl;
+  const productImage = getProductImage(product.id);
 
   return (
     <div className="bg-white rounded-2xl shadow-card border border-morselGold/10 p-6 flex flex-col hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 group">

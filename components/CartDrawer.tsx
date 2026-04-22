@@ -3,23 +3,7 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { useCart } from "./CartProvider";
-import chipsBowl from "@/assets/chips_bowl.png";
-import sixCookie from "@/assets/six_cookie.png";
-import freshDozen from "@/assets/fresh_dozen.png";
-import plateDisplay from "@/assets/plate_display.png";
-import cookieSpread from "@/assets/cookie_spread.png";
-import milkStack from "@/assets/milk_stack.png";
-import plateStack from "@/assets/plate_stack.png";
-import cookieStackLean from "@/assets/cookie-stack-lean.jpg";
-
-const productImageMap: Record<string, any> = {
-  "cc-6": plateStack,
-  "cc-12": cookieStackLean,
-  "bc-6": milkStack,
-  "bc-12": chipsBowl,
-  "hh-6": sixCookie,
-  "hh-12": freshDozen,
-};
+import { getProductImage } from "@/lib/product-images";
 
 type Props = {
   isOpen: boolean;
@@ -104,7 +88,7 @@ export default function CartDrawer({ isOpen, onClose, onCheckout }: Props) {
           ) : (
             <div className="space-y-4">
               {items.map((item) => {
-                const image = productImageMap[item.productId] || chipsBowl;
+                const image = getProductImage(item.productId);
 
                 return (
                   <div
