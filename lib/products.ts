@@ -182,7 +182,7 @@ async function fetchProductsFromStripe(): Promise<Product[]> {
 
 export const getProducts = unstable_cache(
   fetchProductsFromStripe,
-  ["stripe-products-v3"],
+  ["stripe-products-v4"],
   { revalidate: 3600, tags: ["products"] }
 );
 
