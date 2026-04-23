@@ -67,13 +67,14 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <head>
+      <body className="bg-morselCream text-morselBrown font-body">
+        {/* JSON-LD LocalBusiness schema — lives in <body> because a manual <head> in App Router
+            can shove metadata-export tags (title, description) into <body>, which Lighthouse flags
+            as a SEO failure. JSON-LD script tags are valid anywhere in the document per Google. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
-      </head>
-      <body className="bg-morselCream text-morselBrown font-body">
         <SupabaseSessionProvider initialSession={null}>
           <CartProvider>
             <Toaster

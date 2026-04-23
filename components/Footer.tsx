@@ -29,7 +29,7 @@ export default function Footer() {
                 marilynsmorselsbakery@gmail.com
               </a>
             </p>
-            <p className="text-xs text-morselBrown/50 mt-1">
+            <p className="text-xs text-morselBrown/80 mt-1">
               Baked with care in our licensed home kitchen.
             </p>
           </div>
@@ -54,10 +54,10 @@ export default function Footer() {
         {/* Row 3: Social placeholder + copyright */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-morselGold/10 pt-5">
           {/* Social placeholder — links to be added when client provides handles */}
-          <div className="flex items-center gap-3 text-morselBrown/40 text-xs">
+          <div className="flex items-center gap-3 text-morselBrown/80 text-xs">
             <span>Follow us on social — coming soon</span>
           </div>
-          <p className="text-xs text-morselBrown/50">
+          <p className="text-xs text-morselBrown/80">
             &copy; {new Date().getFullYear()} Marilyn&apos;s Morsels Bakery. All rights reserved.
           </p>
         </div>

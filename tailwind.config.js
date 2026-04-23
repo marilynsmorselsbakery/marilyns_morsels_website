@@ -10,6 +10,7 @@ module.exports = {
         morselCream: "#FFF7ED",
         morselBrown: "#3F2A1C",
         morselGold: "#D79B4E",
+        morselGoldDark: "#8B5A15", // WCAG-AA-safe gold — use for text-on-cream + as bg for white text
         morselCocoa: "#2C1810", // Rich cocoa/espresso for buttons & headings
         morselGoldLight: "#E8B875", // Lighter gold for gradients
       },

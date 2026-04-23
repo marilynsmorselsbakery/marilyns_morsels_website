@@ -14,7 +14,7 @@ export default function TermsPage() {
         Terms of Service
       </h1>
       <p className="text-sm text-morselBrown/60 mb-2">Last updated: April 23, 2026</p>
-      <p className="text-xs text-morselBrown/50 mb-10 italic">
+      <p className="text-xs text-morselBrown/80 mb-10 italic">
         These are working terms of service drafted for operational use. This is not legal advice.
         Consult a qualified attorney before relying on this document.
       </p>
@@ -110,7 +110,7 @@ export default function TermsPage() {
           </p>
         </div>
 
-        <p className="text-xs text-morselBrown/50 border-t border-morselGold/20 pt-6">
+        <p className="text-xs text-morselBrown/80 border-t border-morselGold/20 pt-6">
           These terms may be updated without notice. Consult a lawyer before relying on this
           document for legal purposes.
         </p>

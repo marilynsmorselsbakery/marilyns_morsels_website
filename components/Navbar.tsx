@@ -71,7 +71,7 @@ export default function Navbar() {
               priority
             />
             <span className="text-3xl md:text-4xl font-display font-semibold tracking-tight">
-              Marilyn&apos;s <span className="text-morselGold">Morsels</span>
+              Marilyn&apos;s <span className="text-morselGoldDark">Morsels</span>
             </span>
           </Link>
           {/* Desktop Navigation */}
@@ -104,7 +104,7 @@ export default function Navbar() {
                 />
               </svg>
               {itemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-morselGold text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-morselGoldDark text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                   {itemCount > 9 ? "9+" : itemCount}
                 </span>
               )}
@@ -130,7 +130,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/signup"
-                  className="rounded-md bg-morselGold px-3 py-1 text-white transition hover:bg-morselGold/90"
+                  className="rounded-md bg-morselGoldDark px-3 py-1 text-white transition hover:bg-morselGoldDark/90"
                 >
                   Sign up
                 </Link>
@@ -266,7 +266,7 @@ export default function Navbar() {
                 </svg>
                 Cart
                 {itemCount > 0 && (
-                  <span className="bg-morselGold text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  <span className="bg-morselGoldDark text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                     {itemCount > 9 ? "9+" : itemCount}
                   </span>
                 )}
@@ -304,7 +304,7 @@ export default function Navbar() {
                   <Link
                     href="/signup"
                     onClick={closeMobileMenu}
-                    className="rounded-md bg-morselGold px-4 py-2 text-white text-base transition hover:bg-morselGold/90 text-center mt-2"
+                    className="rounded-md bg-morselGoldDark px-4 py-2 text-white text-base transition hover:bg-morselGoldDark/90 text-center mt-2"
                   >
                     Sign up
                   </Link>
