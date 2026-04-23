@@ -114,7 +114,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
                   className="w-full text-xs border border-morselGold/40 rounded-lg px-2 py-1.5 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
                 >
                   {HALF_HALF_COOKIE_FLAVORS.map((f) => (
-                    <option key={f} value={f}>
+                    <option key={f} value={f} disabled={f === halfHalfSecond}>
                       {getHalfHalfLabel(f)}
                     </option>
                   ))}
@@ -128,7 +128,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
                   className="w-full text-xs border border-morselGold/40 rounded-lg px-2 py-1.5 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
                 >
                   {HALF_HALF_COOKIE_FLAVORS.map((f) => (
-                    <option key={f} value={f}>
+                    <option key={f} value={f} disabled={f === halfHalfFirst}>
                       {getHalfHalfLabel(f)}
                     </option>
                   ))}
