@@ -1,93 +1,73 @@
-## Marilyn’s Morsels
+# Marilyn's Morsels
 
-Small-batch cookie shop for Marilyn’s home kitchen bakery. Built with Next.js App Router, Tailwind CSS, and Stripe Checkout for fast, modern ecommerce.
+E-commerce storefront for **Marilyn's Morsels Bakery** — live at [marilynsmorsels.com](https://marilynsmorsels.com).
 
-### Tech Stack
-- Next.js 14 (App Router) + TypeScript
-- Tailwind CSS with custom brand palette
-- Stripe Checkout for payments
-- Bulk inquiry form posts to an email service placeholder
+## Stack
 
-### Getting Started
+- **Framework:** Next.js 15 (App Router)
+- **Runtime:** React 19, TypeScript 5
+- **Styling:** Tailwind CSS 3.4 (custom `morsel*` brand palette)
+- **Auth + orders:** Supabase (SSR adapter, row-level security)
+- **Payments:** Stripe Checkout (live catalog fetched at runtime, cached 1h)
+- **Hosting:** Vercel (Marilyn's Morsels team, Hobby tier)
+
+## Local development
+
 ```bash
+# 1. Install dependencies
 npm install
+
+# 2. Create .env.local with required variables (see below)
+
+# 3. Run dev server
 npm run dev
 # visit http://localhost:3000
 ```
 
-### Environment
-Create `.env.local` with:
-```
-STRIPE_SECRET_KEY=sk_test_or_live_key
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
-SUPABASE_SECRET_KEY=your-secret-key
-```
+### Required environment variables
 
-### Stripe Configuration
-1. Create Products/Prices in Stripe for each pack (IDs must match `lib/products.ts`).
-2. Use test mode keys while developing.
-3. Checkout sessions redirect to `/success` or `/cancel`.
+Supabase (auto-populated in deployed environments by the Vercel–Supabase integration):
 
-### Supabase Setup
-Run the following SQL in Supabase to create the profiles and orders tables:
+- `NEXT_PUBLIC_SB_SUPABASE_URL`
+- `NEXT_PUBLIC_SB_SUPABASE_PUBLISHABLE_KEY`
+- `SB_SUPABASE_SECRET_KEY`
 
-```sql
--- Create profiles table
-create table if not exists profiles (
-  id uuid primary key references auth.users on delete cascade,
-  full_name text,
-  phone text,
-  address_line1 text,
-  address_line2 text,
-  city text,
-  state text,
-  postal_code text,
-  stripe_customer_id text,
-  updated_at timestamptz default now()
-);
+Stripe + base URL:
 
-alter table profiles enable row level security;
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+- `NEXT_PUBLIC_BASE_URL` (e.g., `http://localhost:3000` for dev, `https://marilynsmorsels.com` for prod)
 
-create policy "Users can read own profile"
-  on profiles for select
-  using ((select auth.uid()) = id);
+Never commit real keys. `.env.local` is gitignored.
 
-create policy "Users can upsert own profile"
-  on profiles for insert
-  with check ((select auth.uid()) = id);
+## Scripts
 
-create policy "Users can update own profile"
-  on profiles for update
-  using ((select auth.uid()) = id);
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start local dev server on port 3000 |
+| `npm run build` | Production build |
+| `npm start` | Run the production build locally |
+| `npm run lint` | ESLint (Next core web vitals preset) |
 
--- Create orders table
-create table if not exists orders (
-  id text primary key,
-  supabase_user_id uuid references auth.users(id) on delete set null,
-  product_ids text,
-  amount_total bigint,
-  currency text,
-  payment_status text,
-  stripe_customer_id text,
-  created_at timestamptz default now()
-);
+## Architecture notes
 
-alter table orders enable row level security;
+- **Product catalog** is fetched from Stripe at runtime and cached for 1 hour via Next.js `unstable_cache` (tag: `products`). To add/edit products, use the Stripe dashboard — no code change or redeploy required.
+- **Cart** renders from a client-side snapshot (productId, name, description, price, quantity). Checkout re-fetches live pricing server-side before building the Stripe session — ensures the latest prices are charged even if the cart was built from cached data.
+- **Auth** is handled by Supabase. The SSR adapter keeps sessions synced between server and client components.
+- **Supabase schema** (profiles + orders) is managed via migrations in `supabase/` and applied via the Vercel–Supabase integration.
 
-create policy "Users can read own orders"
-  on orders for select
-  using ((select auth.uid()) = supabase_user_id);
-```
+## Deployment
 
-### Bulk Inquiries
-`app/api/bulk-inquiry/route.ts` currently logs submissions. Replace the TODO with Resend, Formspree, or another transactional email service to notify Marilyn in production.
+- **Host:** Vercel, team `Marilyn's Morsels` (Hobby tier)
+- **Production:** pushes to `main` auto-deploy to `marilynsmorsels.com`
+- **Preview:** any other branch gets an auto-generated preview URL
+- **Commit authorship:** commits must be authored from `marilynsmorselsbakery@gmail.com` (the Vercel team owner). This is preconfigured in the local repo's git config — do not change it.
 
-### Scripts
-- `npm run dev` – local development
-- `npm run lint` – ESLint (Next core web vitals)
-- `npm run build` – production build
+## Support
 
-### Deployment
-Deploy on Vercel. Add the environment variables above (including live Stripe keys) in the Vercel project settings. Set the domain in `NEXT_PUBLIC_BASE_URL`.
+Work requests, bugs, questions — contact Michael Caldwell (Automatonic) at `admin@automatonic.dev`.
+
+## License
+
+Proprietary. All rights reserved by Marilyn's Morsels Bakery.
