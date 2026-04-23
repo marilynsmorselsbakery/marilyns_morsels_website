@@ -81,20 +81,20 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
               toastOptions={{
                 duration: 3000,
                 style: {
-                  background: "#ffffff",
-                  color: "#3F2A1C",
-                  border: "1px solid #D79B4E",
+                  background: "#ffffff",          // white
+                  color: "#3F2A1C",               // morselBrown
+                  border: "1px solid #D79B4E",    // morselGold
                   borderRadius: "8px",
                 },
                 success: {
                   iconTheme: {
-                    primary: "#D79B4E",
+                    primary: "#D79B4E",   // morselGold
                     secondary: "#ffffff",
                   },
                 },
                 error: {
                   iconTheme: {
-                    primary: "#dc2626",
+                    primary: "#dc2626",   // red-600
                     secondary: "#ffffff",
                   },
                 },

@@ -64,6 +64,7 @@ export default function QuantitySelector({
         onChange={handleInputChange}
         min={min}
         max={max}
+        aria-label="Quantity"
         className="w-12 text-center border border-morselGold/40 rounded px-2 py-1 focus:border-morselGold focus:outline-none focus:ring"
       />
       <button

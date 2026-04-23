@@ -70,7 +70,7 @@ export default function WhyMarilyn() {
             <h3 className="text-lg font-display font-semibold mb-2 text-morselCocoa">
               Licensed Kitchen
             </h3>
-            <p className="text-sm text-morselBrown/70">
+            <p className="text-sm text-morselBrown/80">
               Fully licensed and inspected. Every batch meets the highest food safety standards.
             </p>
           </div>
@@ -94,7 +94,7 @@ export default function WhyMarilyn() {
             <h3 className="text-lg font-display font-semibold mb-2 text-morselCocoa">
               Premium Ingredients
             </h3>
-            <p className="text-sm text-morselBrown/70">
+            <p className="text-sm text-morselBrown/80">
               Real butter, quality chocolate, and time-tested recipes. No shortcuts, no compromises.
             </p>
           </div>
@@ -118,14 +118,14 @@ export default function WhyMarilyn() {
             <h3 className="text-lg font-display font-semibold mb-2 text-morselCocoa">
               Small-Batch Quality
             </h3>
-            <p className="text-sm text-morselBrown/70">
+            <p className="text-sm text-morselBrown/80">
               Baked to order, never mass-produced. Every cookie gets individual attention.
             </p>
           </div>
         </div>
 
         <div className="text-center pt-8 border-t border-morselGold/20">
-          <p className="text-morselBrown/60 text-sm">
+          <p className="text-morselBrown/70 text-sm">
             <span className="font-semibold text-morselCocoa">10,000+</span> cookies baked and counting
           </p>
         </div>
