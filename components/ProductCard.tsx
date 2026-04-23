@@ -23,17 +23,15 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
     product.variants[0]
   );
   const [quantity, setQuantity] = useState(1);
-  const [halfHalfFirst, setHalfHalfFirst] = useState<string>(
-    HALF_HALF_COOKIE_FLAVORS[0]
-  );
-  const [halfHalfSecond, setHalfHalfSecond] = useState<string>(
-    HALF_HALF_COOKIE_FLAVORS[1]
-  );
+  const [halfHalfFirst, setHalfHalfFirst] = useState<string>("");
+  const [halfHalfSecond, setHalfHalfSecond] = useState<string>("");
   const { addItem } = useCart();
 
   const isHalfHalf = product.id === "half_half";
+  const halfHalfIncomplete = isHalfHalf && (!halfHalfFirst || !halfHalfSecond);
 
   const handleAddToCart = () => {
+    if (halfHalfIncomplete) return;
     const choices = isHalfHalf
       ? { first: halfHalfFirst, second: halfHalfSecond }
       : undefined;
@@ -76,8 +74,8 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
 
         {/* Size selector */}
         {product.variants.length > 1 && (
-          <div className="mb-3">
-            <label className="block text-xs font-semibold text-morselBrown/70 mb-1 uppercase tracking-wide">
+          <div className="mb-4">
+            <label className="block text-sm font-semibold text-morselBrown/80 mb-2 uppercase tracking-wide">
               Size
             </label>
             <div className="flex flex-wrap gap-2">
@@ -86,7 +84,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
                   key={v.sku}
                   type="button"
                   onClick={() => setSelectedVariant(v)}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-full border transition-all duration-150 ${
+                  className={`px-4 py-2 text-sm font-semibold rounded-full border transition-all duration-150 ${
                     selectedVariant.sku === v.sku
                       ? "bg-morselCocoa text-white border-morselCocoa"
                       : "border-morselGold/40 text-morselBrown hover:border-morselGold hover:bg-morselGold/10"
@@ -101,18 +99,19 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
 
         {/* Half & Half picker */}
         {isHalfHalf && (
-          <div className="mb-3 space-y-2">
-            <label className="block text-xs font-semibold text-morselBrown/70 uppercase tracking-wide">
+          <div className="mb-4 space-y-2">
+            <label className="block text-sm font-semibold text-morselBrown/80 uppercase tracking-wide">
               Pick your 2 flavors
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-morselBrown/60 mb-1">Cookie 1</label>
+                <label className="block text-sm text-morselBrown/70 mb-1">Cookie 1</label>
                 <select
                   value={halfHalfFirst}
                   onChange={(e) => setHalfHalfFirst(e.target.value)}
-                  className="w-full text-xs border border-morselGold/40 rounded-lg px-2 py-1.5 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
+                  className="w-full text-sm border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
                 >
+                  <option value="" disabled>Pick one</option>
                   {HALF_HALF_COOKIE_FLAVORS.map((f) => (
                     <option key={f} value={f} disabled={f === halfHalfSecond}>
                       {getHalfHalfLabel(f)}
@@ -121,12 +120,13 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-morselBrown/60 mb-1">Cookie 2</label>
+                <label className="block text-sm text-morselBrown/70 mb-1">Cookie 2</label>
                 <select
                   value={halfHalfSecond}
                   onChange={(e) => setHalfHalfSecond(e.target.value)}
-                  className="w-full text-xs border border-morselGold/40 rounded-lg px-2 py-1.5 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
+                  className="w-full text-sm border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
                 >
+                  <option value="" disabled>Pick one</option>
                   {HALF_HALF_COOKIE_FLAVORS.map((f) => (
                     <option key={f} value={f} disabled={f === halfHalfFirst}>
                       {getHalfHalfLabel(f)}
@@ -166,8 +166,10 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
             )}
             <button
               onClick={handleAddToCart}
+              disabled={halfHalfIncomplete}
               aria-label={`Add to cart: ${product.name} ${selectedVariant.packLabel}`}
-              className="px-5 py-2.5 text-sm font-semibold rounded-full bg-morselCocoa text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] transition-all duration-200"
+              title={halfHalfIncomplete ? "Pick 2 flavors first" : undefined}
+              className="px-5 py-2.5 text-sm font-semibold rounded-full bg-morselCocoa text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               Add to Cart
             </button>

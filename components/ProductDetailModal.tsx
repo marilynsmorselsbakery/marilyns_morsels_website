@@ -36,12 +36,8 @@ export default function ProductDetailModal({
     null
   );
   const [quantity, setQuantity] = useState(1);
-  const [halfHalfFirst, setHalfHalfFirst] = useState<string>(
-    HALF_HALF_COOKIE_FLAVORS[0]
-  );
-  const [halfHalfSecond, setHalfHalfSecond] = useState<string>(
-    HALF_HALF_COOKIE_FLAVORS[1]
-  );
+  const [halfHalfFirst, setHalfHalfFirst] = useState<string>("");
+  const [halfHalfSecond, setHalfHalfSecond] = useState<string>("");
   const { addItem } = useCart();
 
   // Guard: don't render Radix content at all when product is null
@@ -56,9 +52,11 @@ export default function ProductDetailModal({
       : null;
 
   const isHalfHalf = product?.id === "half_half";
+  const halfHalfIncomplete = isHalfHalf && (!halfHalfFirst || !halfHalfSecond);
 
   const handleAddToCart = () => {
     if (!product || !activeVariant) return;
+    if (halfHalfIncomplete) return;
     const choices = isHalfHalf
       ? { first: halfHalfFirst, second: halfHalfSecond }
       : undefined;
@@ -186,6 +184,7 @@ export default function ProductDetailModal({
                             onChange={(e) => setHalfHalfFirst(e.target.value)}
                             className="w-full border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
                           >
+                            <option value="" disabled>Pick one</option>
                             {HALF_HALF_COOKIE_FLAVORS.map((f) => (
                               <option key={f} value={f} disabled={f === halfHalfSecond}>
                                 {getHalfHalfLabel(f)}
@@ -202,6 +201,7 @@ export default function ProductDetailModal({
                             onChange={(e) => setHalfHalfSecond(e.target.value)}
                             className="w-full border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
                           >
+                            <option value="" disabled>Pick one</option>
                             {HALF_HALF_COOKIE_FLAVORS.map((f) => (
                               <option key={f} value={f} disabled={f === halfHalfFirst}>
                                 {getHalfHalfLabel(f)}
@@ -328,10 +328,16 @@ export default function ProductDetailModal({
                   </div>
                   <button
                     onClick={handleAddToCart}
-                    className="w-full px-8 py-4 bg-morselCocoa text-white text-base font-semibold rounded-full shadow-button hover:shadow-button-hover hover:scale-[1.02] transition-all duration-200"
+                    disabled={halfHalfIncomplete}
+                    title={halfHalfIncomplete ? "Pick 2 flavors first" : undefined}
+                    className="w-full px-8 py-4 bg-morselCocoa text-white text-base font-semibold rounded-full shadow-button hover:shadow-button-hover hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    Add to Cart —{" "}
-                    ${((activeVariant.priceCents * quantity) / 100).toFixed(2)}
+                    {halfHalfIncomplete ? "Pick 2 flavors to continue" : (
+                      <>
+                        Add to Cart —{" "}
+                        ${((activeVariant.priceCents * quantity) / 100).toFixed(2)}
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
