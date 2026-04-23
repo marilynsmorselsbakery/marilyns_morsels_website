@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import SupabaseSessionProvider from "@/components/SupabaseSessionProvider";
 import { CartProvider } from "@/components/CartProvider";
 import { Toaster } from "react-hot-toast";
-import { createSupabaseServerComponentClient } from "@/lib/supabase/server";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -41,10 +40,10 @@ export const metadata = {
   },
 };
 
-export default async function RootLayout({ children }: { children: ReactNode }) {
-  const supabase = await createSupabaseServerComponentClient();
-  await supabase.auth.getUser();
-
+export default function RootLayout({ children }: { children: ReactNode }) {
+  // Supabase session refresh is handled by middleware.ts; no await needed here.
+  // Keeping the layout synchronous avoids creating a streaming boundary that
+  // was preventing React 19 from auto-hoisting <title>/<meta> tags to <head>.
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="bg-morselCream text-morselBrown font-body">
