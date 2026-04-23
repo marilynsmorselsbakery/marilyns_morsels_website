@@ -54,8 +54,9 @@ const PACK_LABEL: Record<string, string> = {
 const FLAVOR_ORDER = [
   "chocolate_chip",
   "butterscotch_chip",
-  "half_half",
   "pbcup_sugar_cookie",
+  "half_half",
+  "trio",
   "chocolate_chip_dough",
   "butterscotch_chip_dough",
   "pbcup_sugar_cookie_dough",
@@ -66,6 +67,7 @@ export const FLAVOR_DISPLAY_NAMES: Record<string, string> = {
   butterscotch_chip: "Butterscotch Chocolate Chip",
   half_half: "Half & Half",
   pbcup_sugar_cookie: "Peanut Butter Cup",
+  trio: "Trio",
   chocolate_chip_dough: "Chocolate Chip Cookie Dough",
   butterscotch_chip_dough: "Butterscotch Chocolate Chip Cookie Dough",
   pbcup_sugar_cookie_dough: "Peanut Butter Cup Cookie Dough",
@@ -79,6 +81,8 @@ export const FLAVOR_DESCRIPTIONS: Record<string, string> = {
   half_half: "Your pick of any 2 of our 3 signature cookie flavors.",
   pbcup_sugar_cookie:
     "Soft sugar cookies with a peanut butter cup pressed in the center.",
+  trio:
+    "All three cookies in one pack — chocolate chip, butterscotch chocolate chip, and peanut butter cup. 6-pack has 2 of each.",
   chocolate_chip_dough: "Ready-to-bake chocolate chip cookie dough.",
   butterscotch_chip_dough:
     "Ready-to-bake butterscotch chocolate chip cookie dough.",

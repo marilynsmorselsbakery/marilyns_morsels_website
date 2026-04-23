@@ -6,6 +6,7 @@ import cowboyBaked from "@/assets/cowboy-baked.jpg";
 import cowboyDough from "@/assets/cowboy-dough.jpg";
 import pbcupBaked from "@/assets/pbcup-baked.jpg";
 import pbcupDough from "@/assets/pbcup-dough.jpg";
+import trioBaked from "@/assets/trio.jpg";
 // Legacy placeholders — kept for Half & Half (no real photo yet) + FALLBACK
 import chipsBowl from "@/assets/chips_bowl.png";
 import sixCookie from "@/assets/six_cookie.png";
@@ -29,6 +30,7 @@ const PRODUCT_IMAGES: Record<string, StaticImageData> = {
   butterscotch_chip: cowboyBaked,
   half_half: sixCookie,         // placeholder — no real Half & Half photo yet
   pbcup_sugar_cookie: pbcupBaked,
+  trio: trioBaked,              // variety pile showing all 3 cookie flavors
 
   // Dough
   chocolate_chip_dough: ccDough,
