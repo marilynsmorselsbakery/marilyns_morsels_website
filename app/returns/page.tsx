@@ -71,7 +71,7 @@ export default function ReturnsPage() {
           </p>
         </div>
 
-        <p className="text-xs text-morselBrown/50 border-t border-morselGold/20 pt-6">
+        <p className="text-xs text-morselBrown/80 border-t border-morselGold/20 pt-6">
           This policy may be updated without notice. For questions, email
           marilynsmorselsbakery@gmail.com.
         </p>

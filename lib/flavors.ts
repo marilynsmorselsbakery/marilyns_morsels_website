@@ -23,12 +23,32 @@ export const FLAVOR_SUBTITLES: Record<string, string> = {
     "Ready-to-bake peanut butter cup sugar cookie dough.",
 };
 
+/** Short display labels for H&H picker dropdowns */
+export const HALF_HALF_OPTION_LABELS: Record<string, string> = {
+  chocolate_chip: "Chocolate Chip",
+  butterscotch_chip: "Butterscotch Chocolate Chip",
+  pbcup_sugar_cookie: "Peanut Butter Cup",
+};
+
+/** The 3 cookie flavors eligible for H&H selection (no doughs, no half_half) */
+export const HALF_HALF_COOKIE_FLAVORS = [
+  "chocolate_chip",
+  "butterscotch_chip",
+  "pbcup_sugar_cookie",
+] as const;
+
+export type HalfHalfFlavor = (typeof HALF_HALF_COOKIE_FLAVORS)[number];
+
 export function getFlavorLabel(flavor: string): string {
   return FLAVOR_LABELS[flavor] ?? flavor;
 }
 
 export function getFlavorSubtitle(flavor: string): string {
   return FLAVOR_SUBTITLES[flavor] ?? "";
+}
+
+export function getHalfHalfLabel(flavor: string): string {
+  return HALF_HALF_OPTION_LABELS[flavor] ?? getFlavorLabel(flavor);
 }
 
 export function getPackSizeDisplay(

@@ -5,47 +5,92 @@ import { getStripe } from "./stripe";
 
 export type ProductCategory = "cookie" | "dough";
 
-export interface ProductOption {
-  id: string;
+export interface ProductVariant {
+  sku: string;              // e.g., "cc-6" — unique per variant
   stripeProductId: string;
   stripePriceId: string;
+  packSize: string;         // "6" / "12" / "24" / "pint" / "quart" / "half_gallon"
+  packLabel: string;        // "Half-Dozen" / "Dozen" / "2-Dozen" / "Pint" / "Quart" / "Half-Gallon"
+  priceCents: number;
+}
+
+export interface Product {
+  id: string;               // flavor slug — e.g., "chocolate_chip"
+  flavor: string;           // same as id
+  name: string;             // display name
+  description: string;
+  category: ProductCategory;
+  variants: ProductVariant[]; // sorted by pack size (smallest → largest)
+}
+
+/** Legacy alias — keep so any lingering imports don't break. Removed from new code. */
+export type ProductOption = ProductVariant & {
+  id: string;
   name: string;
   description: string;
   flavor: string;
   packSize: string;
   category: ProductCategory;
-  priceCents: number;
-}
+};
 
 const PACK_ORDER: Record<string, number> = {
   "6": 1,
   "12": 2,
-  pint: 3,
-  quart: 4,
+  "24": 3,
+  pint: 4,
+  quart: 5,
+  half_gallon: 6,
+};
+
+const PACK_LABEL: Record<string, string> = {
+  "6": "Half-Dozen",
+  "12": "Dozen",
+  "24": "2-Dozen",
+  pint: "Pint",
+  quart: "Quart",
+  half_gallon: "Half-Gallon",
 };
 
 const FLAVOR_ORDER = [
   "chocolate_chip",
   "butterscotch_chip",
-  "half_half",
   "pbcup_sugar_cookie",
+  "half_half",
+  "trio",
   "chocolate_chip_dough",
   "butterscotch_chip_dough",
   "pbcup_sugar_cookie_dough",
 ];
 
-function sortProducts(products: ProductOption[]): ProductOption[] {
-  return [...products].sort((a, b) => {
-    const ai = FLAVOR_ORDER.indexOf(a.flavor);
-    const bi = FLAVOR_ORDER.indexOf(b.flavor);
-    const aFlavor = ai === -1 ? 999 : ai;
-    const bFlavor = bi === -1 ? 999 : bi;
-    if (aFlavor !== bFlavor) return aFlavor - bFlavor;
-    return (PACK_ORDER[a.packSize] ?? 99) - (PACK_ORDER[b.packSize] ?? 99);
-  });
-}
+export const FLAVOR_DISPLAY_NAMES: Record<string, string> = {
+  chocolate_chip: "Old Fashion Chocolate Chip",
+  butterscotch_chip: "Butterscotch Chocolate Chip",
+  half_half: "Half & Half",
+  pbcup_sugar_cookie: "Peanut Butter Cup",
+  trio: "Trio",
+  chocolate_chip_dough: "Chocolate Chip Cookie Dough",
+  butterscotch_chip_dough: "Butterscotch Chocolate Chip Cookie Dough",
+  pbcup_sugar_cookie_dough: "Peanut Butter Cup Cookie Dough",
+};
 
-async function fetchProductsFromStripe(): Promise<ProductOption[]> {
+export const FLAVOR_DESCRIPTIONS: Record<string, string> = {
+  chocolate_chip:
+    "The classic — soft-centered chocolate chip cookies baked fresh in Marilyn's kitchen.",
+  butterscotch_chip:
+    "Rich butterscotch and chocolate chips with caramelized edges.",
+  half_half: "Your pick of any 2 of our 3 signature cookie flavors.",
+  pbcup_sugar_cookie:
+    "Soft sugar cookies with a peanut butter cup pressed in the center.",
+  trio:
+    "All three cookies in one pack — chocolate chip, butterscotch chocolate chip, and peanut butter cup. 6-pack has 2 of each.",
+  chocolate_chip_dough: "Ready-to-bake chocolate chip cookie dough.",
+  butterscotch_chip_dough:
+    "Ready-to-bake butterscotch chocolate chip cookie dough.",
+  pbcup_sugar_cookie_dough:
+    "Ready-to-bake peanut butter cup sugar cookie dough.",
+};
+
+async function fetchProductsFromStripe(): Promise<Product[]> {
   let productsResp, pricesResp;
   try {
     const stripe = getStripe();
@@ -67,7 +112,13 @@ async function fetchProductsFromStripe(): Promise<ProductOption[]> {
     }
   }
 
-  const products: ProductOption[] = [];
+  // Build raw variants from Stripe products
+  const variantsByFlavor = new Map<string, ProductVariant[]>();
+  const metaByFlavor = new Map<
+    string,
+    { name: string; description: string; category: ProductCategory }
+  >();
+
   for (const product of productsResp.data) {
     const slug = product.metadata?.slug;
     const flavor = product.metadata?.flavor;
@@ -78,31 +129,78 @@ async function fetchProductsFromStripe(): Promise<ProductOption[]> {
     const price = priceByProduct.get(product.id);
     if (!price || price.unit_amount == null) continue;
 
-    products.push({
-      id: slug,
+    const variant: ProductVariant = {
+      sku: slug,
       stripeProductId: product.id,
       stripePriceId: price.id,
-      name: product.name,
-      description: product.description ?? "",
-      flavor,
       packSize,
-      category,
+      packLabel: PACK_LABEL[packSize] ?? packSize,
       priceCents: price.unit_amount,
+    };
+
+    const existing = variantsByFlavor.get(flavor) ?? [];
+    existing.push(variant);
+    variantsByFlavor.set(flavor, existing);
+
+    // Keep first-seen metadata as fallback for display name/description
+    if (!metaByFlavor.has(flavor)) {
+      metaByFlavor.set(flavor, {
+        name: product.name,
+        description: product.description ?? "",
+        category,
+      });
+    }
+  }
+
+  // Assemble grouped Products, sorted by FLAVOR_ORDER
+  const products: Product[] = [];
+
+  const sortedFlavors = Array.from(variantsByFlavor.keys()).sort((a, b) => {
+    const ai = FLAVOR_ORDER.indexOf(a);
+    const bi = FLAVOR_ORDER.indexOf(b);
+    return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+  });
+
+  for (const flavor of sortedFlavors) {
+    const variants = (variantsByFlavor.get(flavor) ?? []).sort(
+      (a, b) => (PACK_ORDER[a.packSize] ?? 99) - (PACK_ORDER[b.packSize] ?? 99)
+    );
+    const meta = metaByFlavor.get(flavor)!;
+
+    products.push({
+      id: flavor,
+      flavor,
+      name: FLAVOR_DISPLAY_NAMES[flavor] ?? meta.name,
+      description: FLAVOR_DESCRIPTIONS[flavor] ?? meta.description,
+      category: meta.category,
+      variants,
     });
   }
 
-  return sortProducts(products);
+  return products;
 }
 
 export const getProducts = unstable_cache(
   fetchProductsFromStripe,
-  ["stripe-products-v2"],
+  ["stripe-products-v4"],
   { revalidate: 3600, tags: ["products"] }
 );
 
+export async function getProductByFlavor(
+  flavor: string
+): Promise<Product | undefined> {
+  const all = await getProducts();
+  return all.find((p) => p.flavor === flavor);
+}
+
+/** @deprecated Use getProductByFlavor instead. Kept for checkout route compatibility. */
 export async function getProductBySlug(
   slug: string
-): Promise<ProductOption | undefined> {
+): Promise<ProductVariant | undefined> {
   const all = await getProducts();
-  return all.find((p) => p.id === slug);
+  for (const product of all) {
+    const variant = product.variants.find((v) => v.sku === slug);
+    if (variant) return variant;
+  }
+  return undefined;
 }

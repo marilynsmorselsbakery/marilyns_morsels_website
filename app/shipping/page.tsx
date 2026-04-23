@@ -73,7 +73,7 @@ export default function ShippingPage() {
           </p>
         </div>
 
-        <p className="text-xs text-morselBrown/50 border-t border-morselGold/20 pt-6">
+        <p className="text-xs text-morselBrown/80 border-t border-morselGold/20 pt-6">
           This shipping policy may be updated without notice. Please review it before each order.
           For questions, email marilynsmorselsbakery@gmail.com.
         </p>

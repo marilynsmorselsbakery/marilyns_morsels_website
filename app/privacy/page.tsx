@@ -14,7 +14,7 @@ export default function PrivacyPage() {
         Privacy Policy
       </h1>
       <p className="text-sm text-morselBrown/60 mb-2">Last updated: April 23, 2026</p>
-      <p className="text-xs text-morselBrown/50 mb-10 italic">
+      <p className="text-xs text-morselBrown/80 mb-10 italic">
         This is a working privacy policy drafted for operational use. It is not legal advice.
         Consult a qualified attorney before relying on this document for regulatory compliance.
       </p>
@@ -131,7 +131,7 @@ export default function PrivacyPage() {
           </p>
         </div>
 
-        <p className="text-xs text-morselBrown/50 border-t border-morselGold/20 pt-6">
+        <p className="text-xs text-morselBrown/80 border-t border-morselGold/20 pt-6">
           This privacy policy may be updated without notice. Consult a lawyer before relying
           on this document for legal or regulatory purposes.
         </p>

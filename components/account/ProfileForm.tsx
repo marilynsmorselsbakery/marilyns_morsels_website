@@ -132,7 +132,7 @@ export default function ProfileForm({ email, initialProfile }: Props) {
               />
             ) : (
               <div className="rounded-md border border-transparent px-3 py-2 text-morselBrown/80">
-                {formState.full_name || <span className="text-morselBrown/50">Not set</span>}
+                {formState.full_name || <span className="text-morselBrown/80">Not set</span>}
               </div>
             )}
           </label>
@@ -147,7 +147,7 @@ export default function ProfileForm({ email, initialProfile }: Props) {
               />
             ) : (
               <div className="rounded-md border border-transparent px-3 py-2 text-morselBrown/80">
-                {formState.phone || <span className="text-morselBrown/50">Not set</span>}
+                {formState.phone || <span className="text-morselBrown/80">Not set</span>}
               </div>
             )}
           </label>
@@ -162,7 +162,7 @@ export default function ProfileForm({ email, initialProfile }: Props) {
               />
             ) : (
               <div className="rounded-md border border-transparent px-3 py-2 text-morselBrown/80">
-                {formState.address_line1 || <span className="text-morselBrown/50">Not set</span>}
+                {formState.address_line1 || <span className="text-morselBrown/80">Not set</span>}
               </div>
             )}
           </label>
@@ -177,7 +177,7 @@ export default function ProfileForm({ email, initialProfile }: Props) {
               />
             ) : (
               <div className="rounded-md border border-transparent px-3 py-2 text-morselBrown/80">
-                {formState.address_line2 || <span className="text-morselBrown/50">Not set</span>}
+                {formState.address_line2 || <span className="text-morselBrown/80">Not set</span>}
               </div>
             )}
           </label>
@@ -192,7 +192,7 @@ export default function ProfileForm({ email, initialProfile }: Props) {
               />
             ) : (
               <div className="rounded-md border border-transparent px-3 py-2 text-morselBrown/80">
-                {formState.city || <span className="text-morselBrown/50">Not set</span>}
+                {formState.city || <span className="text-morselBrown/80">Not set</span>}
               </div>
             )}
           </label>
@@ -207,7 +207,7 @@ export default function ProfileForm({ email, initialProfile }: Props) {
               />
             ) : (
               <div className="rounded-md border border-transparent px-3 py-2 text-morselBrown/80">
-                {formState.state || <span className="text-morselBrown/50">Not set</span>}
+                {formState.state || <span className="text-morselBrown/80">Not set</span>}
               </div>
             )}
           </label>
@@ -222,7 +222,7 @@ export default function ProfileForm({ email, initialProfile }: Props) {
               />
             ) : (
               <div className="rounded-md border border-transparent px-3 py-2 text-morselBrown/80">
-                {formState.postal_code || <span className="text-morselBrown/50">Not set</span>}
+                {formState.postal_code || <span className="text-morselBrown/80">Not set</span>}
               </div>
             )}
           </label>

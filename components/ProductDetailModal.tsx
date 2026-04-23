@@ -4,8 +4,8 @@ import { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { ProductOption } from "@/lib/products";
-import { getFlavorLabel, getPackSizeDisplay } from "@/lib/flavors";
+import type { Product, ProductVariant } from "@/lib/products";
+import { getFlavorLabel, getPackSizeDisplay, HALF_HALF_COOKIE_FLAVORS, getHalfHalfLabel } from "@/lib/flavors";
 import { useCart } from "./CartProvider";
 import QuantitySelector from "./QuantitySelector";
 import { getProductImage } from "@/lib/product-images";
@@ -24,7 +24,7 @@ const ingredientLabels: Record<string, { url: string; name: string }> = {
 interface ProductDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
-  product: ProductOption | null;
+  product: Product | null;
 }
 
 export default function ProductDetailModal({
@@ -32,49 +32,77 @@ export default function ProductDetailModal({
   onClose,
   product,
 }: ProductDetailModalProps) {
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
+    null
+  );
   const [quantity, setQuantity] = useState(1);
+  const [halfHalfFirst, setHalfHalfFirst] = useState<string>("");
+  const [halfHalfSecond, setHalfHalfSecond] = useState<string>("");
   const { addItem } = useCart();
-
-  const handleAddToCart = () => {
-    if (!product) return;
-    addItem(product, quantity);
-    toast.success(`${quantity} ${product.name}${quantity > 1 ? "s" : ""} added to cart`);
-    setQuantity(1);
-    onClose();
-  };
 
   // Guard: don't render Radix content at all when product is null
   const open = isOpen && product !== null;
 
+  // Resolve the active variant (selectedVariant state, or default to first)
+  const activeVariant =
+    product
+      ? (selectedVariant && product.variants.some((v) => v.sku === selectedVariant.sku)
+          ? selectedVariant
+          : product.variants[0])
+      : null;
+
+  const isHalfHalf = product?.id === "half_half";
+  const halfHalfIncomplete = isHalfHalf && (!halfHalfFirst || !halfHalfSecond);
+
+  const handleAddToCart = () => {
+    if (!product || !activeVariant) return;
+    if (halfHalfIncomplete) return;
+    const choices = isHalfHalf
+      ? { first: halfHalfFirst, second: halfHalfSecond }
+      : undefined;
+    addItem(activeVariant, product, quantity, choices);
+    const label = isHalfHalf
+      ? `${getHalfHalfLabel(halfHalfFirst)} + ${getHalfHalfLabel(halfHalfSecond)}`
+      : activeVariant.packLabel;
+    toast.success(
+      `${quantity > 1 ? `${quantity}× ` : ""}${product.name} (${label}) added to cart`
+    );
+    setQuantity(1);
+    onClose();
+  };
+
   const productImage = product ? getProductImage(product.id) : null;
   const ingredientLabel =
-    product && product.flavor !== "half_half"
-      ? ingredientLabels[product.flavor]
+    product && !isHalfHalf ? ingredientLabels[product.flavor] : null;
+  const packSizeDisplay =
+    activeVariant && product
+      ? getPackSizeDisplay(activeVariant.packSize, product.category)
       : null;
-  const packSizeDisplay = product
-    ? getPackSizeDisplay(product.packSize, product.category)
-    : null;
   const aboutLabel =
     product?.category === "dough" ? "About This Dough" : "About This Cookie";
 
   return (
-    <Dialog.Root open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
+    <Dialog.Root
+      open={open}
+      onOpenChange={(o) => {
+        if (!o) onClose();
+      }}
+    >
       <Dialog.Portal>
         {/* Overlay */}
-        <Dialog.Overlay
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
-        />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" />
 
         {/* Modal panel */}
         <Dialog.Content
           className="fixed inset-0 z-50 flex items-center justify-center p-4 focus:outline-none"
           aria-describedby="product-modal-description"
         >
-          {product && (
+          {product && activeVariant && (
             <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
               {/* Hidden description for screen readers */}
               <p id="product-modal-description" className="sr-only">
-                Product details for {product.name}. Review ingredients, pricing, and add to cart.
+                Product details for {product.name}. Review ingredients, pricing,
+                and add to cart.
               </p>
 
               {/* Header */}
@@ -115,6 +143,76 @@ export default function ProductDetailModal({
                     </div>
                   )}
 
+                  {/* Size selector */}
+                  {product.variants.length > 1 && (
+                    <div className="mb-6">
+                      <h3 className="text-lg font-display font-semibold text-morselCocoa mb-3">
+                        Choose a Size
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {product.variants.map((v) => (
+                          <button
+                            key={v.sku}
+                            type="button"
+                            onClick={() => setSelectedVariant(v)}
+                            className={`px-4 py-2 text-sm font-semibold rounded-full border transition-all duration-150 ${
+                              activeVariant.sku === v.sku
+                                ? "bg-morselCocoa text-white border-morselCocoa"
+                                : "border-morselGold/40 text-morselBrown hover:border-morselGold hover:bg-morselGold/10"
+                            }`}
+                          >
+                            {v.packLabel} — ${(v.priceCents / 100).toFixed(2)}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Half & Half picker */}
+                  {isHalfHalf && (
+                    <div className="mb-6">
+                      <h3 className="text-lg font-display font-semibold text-morselCocoa mb-3">
+                        Pick Your 2 Flavors
+                      </h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-morselBrown/70 mb-1">
+                            Cookie 1
+                          </label>
+                          <select
+                            value={halfHalfFirst}
+                            onChange={(e) => setHalfHalfFirst(e.target.value)}
+                            className="w-full border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
+                          >
+                            <option value="" disabled>Pick one</option>
+                            {HALF_HALF_COOKIE_FLAVORS.map((f) => (
+                              <option key={f} value={f} disabled={f === halfHalfSecond}>
+                                {getHalfHalfLabel(f)}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-morselBrown/70 mb-1">
+                            Cookie 2
+                          </label>
+                          <select
+                            value={halfHalfSecond}
+                            onChange={(e) => setHalfHalfSecond(e.target.value)}
+                            className="w-full border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
+                          >
+                            <option value="" disabled>Pick one</option>
+                            {HALF_HALF_COOKIE_FLAVORS.map((f) => (
+                              <option key={f} value={f} disabled={f === halfHalfFirst}>
+                                {getHalfHalfLabel(f)}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Product Details */}
                   {packSizeDisplay && (
                     <div className="mb-6">
@@ -134,9 +232,11 @@ export default function ProductDetailModal({
                           </p>
                         </div>
                         <div className="bg-morselCream/50 rounded-lg p-5 border border-morselGold/20 shadow-lg shadow-morselGold/20">
-                          <p className="text-sm text-morselBrown/70 mb-2 font-medium">Price</p>
+                          <p className="text-sm text-morselBrown/70 mb-2 font-medium">
+                            Price
+                          </p>
                           <p className="text-2xl font-bold text-morselCocoa">
-                            ${(product.priceCents / 100).toFixed(2)}
+                            ${(activeVariant.priceCents / 100).toFixed(2)}
                           </p>
                         </div>
                       </div>
@@ -162,14 +262,15 @@ export default function ProductDetailModal({
                     </div>
                   )}
 
-                  {product.flavor === "half_half" && (
+                  {isHalfHalf && (
                     <div className="mb-6">
                       <h3 className="text-xl font-display font-semibold text-morselCocoa mb-3">
                         Ingredients
                       </h3>
                       <div className="bg-morselCream/30 rounded-xl p-6">
                         <p className="text-morselBrown/80 mb-4">
-                          This pack contains both Chocolate Chip and Butterscotch Chocolate Chip cookies.
+                          This pack contains both Chocolate Chip and Butterscotch
+                          Chocolate Chip cookies.
                         </p>
                         <div className="grid md:grid-cols-2 gap-4">
                           <div>
@@ -193,7 +294,9 @@ export default function ProductDetailModal({
                             </h4>
                             <div className="flex justify-center">
                               <Image
-                                src={ingredientLabels.butterscotch_chip.url}
+                                src={
+                                  ingredientLabels.butterscotch_chip.url
+                                }
                                 alt="Butterscotch Chocolate Chip Cookie Ingredient Label"
                                 width={300}
                                 height={400}
@@ -213,7 +316,9 @@ export default function ProductDetailModal({
               <div className="p-6 border-t border-morselGold/20 bg-morselCream/20">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-center gap-4">
-                    <span className="text-sm font-medium text-morselBrown/70">Quantity:</span>
+                    <span className="text-sm font-medium text-morselBrown/70">
+                      Quantity:
+                    </span>
                     <QuantitySelector
                       value={quantity}
                       onChange={setQuantity}
@@ -223,9 +328,16 @@ export default function ProductDetailModal({
                   </div>
                   <button
                     onClick={handleAddToCart}
-                    className="w-full px-8 py-4 bg-morselCocoa text-white text-base font-semibold rounded-full shadow-button hover:shadow-button-hover hover:scale-[1.02] transition-all duration-200"
+                    disabled={halfHalfIncomplete}
+                    title={halfHalfIncomplete ? "Pick 2 flavors first" : undefined}
+                    className="w-full px-8 py-4 bg-morselCocoa text-white text-base font-semibold rounded-full shadow-button hover:shadow-button-hover hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    Add to Cart - ${((product.priceCents * quantity) / 100).toFixed(2)}
+                    {halfHalfIncomplete ? "Pick 2 flavors to continue" : (
+                      <>
+                        Add to Cart —{" "}
+                        ${((activeVariant.priceCents * quantity) / 100).toFixed(2)}
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
