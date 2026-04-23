@@ -143,7 +143,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
         <div className="text-xl font-display font-bold text-morselCocoa">
           ${(selectedVariant.priceCents / 100).toFixed(2)}
         </div>
-        <div className="flex flex-col gap-2 items-end">
+        <div className="flex flex-col gap-2 items-end mr-2">
           <QuantitySelector
             value={quantity}
             onChange={setQuantity}
