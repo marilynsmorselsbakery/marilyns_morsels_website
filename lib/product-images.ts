@@ -7,9 +7,9 @@ import cowboyDough from "@/assets/cowboy-dough.jpg";
 import pbcupBaked from "@/assets/pbcup-baked.jpg";
 import pbcupDough from "@/assets/pbcup-dough.jpg";
 import trioBaked from "@/assets/trio.jpg";
-// Legacy placeholders — kept for Half & Half (no real photo yet) + FALLBACK
+import halfHalfPile from "@/assets/half-half.jpg";
+// Legacy fallback
 import chipsBowl from "@/assets/chips_bowl.png";
-import sixCookie from "@/assets/six_cookie.png";
 
 /**
  * Maps flavor slug → local image asset.
@@ -28,9 +28,9 @@ const PRODUCT_IMAGES: Record<string, StaticImageData> = {
   // Cookies — baked hero shots
   chocolate_chip: ccBaked,
   butterscotch_chip: cowboyBaked,
-  half_half: sixCookie,         // placeholder — no real Half & Half photo yet
+  half_half: halfHalfPile,      // variety pile — shows all 3 flavors, implies pick-any-2
   pbcup_sugar_cookie: pbcupBaked,
-  trio: trioBaked,              // variety pile showing all 3 cookie flavors
+  trio: trioBaked,              // 3x3 grid — literally shows 3 of each flavor
 
   // Dough
   chocolate_chip_dough: ccDough,
