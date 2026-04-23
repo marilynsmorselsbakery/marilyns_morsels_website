@@ -1,22 +1,19 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import ProductDetailModal from "@/components/ProductDetailModal";
-import type { ProductOption } from "@/lib/products";
-import { getFlavorLabel, getFlavorSubtitle } from "@/lib/flavors";
+import type { Product } from "@/lib/products";
 
 type Props = {
-  products: ProductOption[];
+  products: Product[];
 };
 
 export default function ShopGrid({ products }: Props) {
-  const [selectedProduct, setSelectedProduct] = useState<ProductOption | null>(
-    null
-  );
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openProductModal = (product: ProductOption) => {
+  const openProductModal = (product: Product) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
   };
@@ -26,15 +23,9 @@ export default function ShopGrid({ products }: Props) {
     setSelectedProduct(null);
   };
 
-  const grouped = useMemo(() => {
-    const byFlavor = new Map<string, ProductOption[]>();
-    for (const product of products) {
-      const existing = byFlavor.get(product.flavor) ?? [];
-      existing.push(product);
-      byFlavor.set(product.flavor, existing);
-    }
-    return Array.from(byFlavor.entries());
-  }, [products]);
+  // Group by category for section headers
+  const cookies = products.filter((p) => p.category === "cookie");
+  const doughs = products.filter((p) => p.category === "dough");
 
   return (
     <section className="max-w-6xl mx-auto px-4 pt-28 pb-16 md:pt-32 md:pb-20">
@@ -42,23 +33,22 @@ export default function ShopGrid({ products }: Props) {
         Shop
       </h1>
       <p className="text-lg text-morselBrown/80 mb-12">
-        Baked to order in small batches. Please allow a short lead time for freshness.
+        Baked to order in small batches. Please allow a short lead time for
+        freshness.
       </p>
 
-      {grouped.map(([flavor, items]) => (
-        <div key={flavor} className="mb-12">
+      {cookies.length > 0 && (
+        <div className="mb-14">
           <div className="mb-6 pb-3 border-b-2 border-morselGold/30">
             <h2 className="text-2xl md:text-3xl font-display font-bold text-morselCocoa">
-              {getFlavorLabel(flavor)}
+              Cookies
             </h2>
-            {getFlavorSubtitle(flavor) && (
-              <p className="text-morselBrown/80 mt-2">
-                {getFlavorSubtitle(flavor)}
-              </p>
-            )}
+            <p className="text-morselBrown/80 mt-2">
+              Fresh-baked in small batches — choose your flavor and pack size.
+            </p>
           </div>
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-2">
-            {items.map((product) => (
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
+            {cookies.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
@@ -67,7 +57,30 @@ export default function ShopGrid({ products }: Props) {
             ))}
           </div>
         </div>
-      ))}
+      )}
+
+      {doughs.length > 0 && (
+        <div className="mb-14">
+          <div className="mb-6 pb-3 border-b-2 border-morselGold/30">
+            <h2 className="text-2xl md:text-3xl font-display font-bold text-morselCocoa">
+              Cookie Dough
+            </h2>
+            <p className="text-morselBrown/80 mt-2">
+              Ready-to-bake at home — same great recipes, straight from the
+              freezer.
+            </p>
+          </div>
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
+            {doughs.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onInfoClick={() => openProductModal(product)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       <ProductDetailModal
         isOpen={isModalOpen}

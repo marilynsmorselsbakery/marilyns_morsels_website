@@ -73,11 +73,12 @@ export default function CheckoutPage() {
       <div className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-4">
           {items.map((item) => {
-            const image = getProductImage(item.productId);
+            const image = getProductImage(item.flavorId);
+            const rowKey = `${item.sku}|${item.halfHalfChoices?.first ?? ""}|${item.halfHalfChoices?.second ?? ""}`;
 
             return (
               <div
-                key={item.productId}
+                key={rowKey}
                 className="flex gap-4 p-4 border border-morselGold/20 rounded-lg bg-white/90"
               >
                 <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-gradient-to-br from-morselGoldLight/20 to-morselGold/10">
@@ -91,7 +92,12 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-morselCocoa mb-1">{item.name}</h3>
-                  <p className="text-sm text-morselBrown/70 mb-2">{item.description}</p>
+                  {item.halfHalfChoices && (
+                    <p className="text-xs text-morselBrown/60 mb-1">
+                      {item.halfHalfChoices.first.replace(/_/g, " ")} +{" "}
+                      {item.halfHalfChoices.second.replace(/_/g, " ")}
+                    </p>
+                  )}
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-morselBrown/70">Quantity: {item.quantity}</span>
                     <span className="font-semibold text-morselCocoa">

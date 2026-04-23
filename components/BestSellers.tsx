@@ -2,13 +2,13 @@ import ProductCard from "@/components/ProductCard";
 import { getProducts } from "@/lib/products";
 import Link from "next/link";
 
-const FEATURED_SLUGS = ["cc-6", "hh-12", "bc-12"];
+const FEATURED_FLAVORS = ["chocolate_chip", "half_half", "butterscotch_chip"];
 const FEATURED_TAGS = ["Best-seller", "Marilyn's Favorite", "Rising Star"];
 
 export default async function BestSellers() {
   const products = await getProducts();
-  const featured = FEATURED_SLUGS.map((slug) =>
-    products.find((p) => p.id === slug)
+  const featured = FEATURED_FLAVORS.map((flavor) =>
+    products.find((p) => p.flavor === flavor)
   ).filter((p): p is NonNullable<typeof p> => p !== undefined);
 
   return (
