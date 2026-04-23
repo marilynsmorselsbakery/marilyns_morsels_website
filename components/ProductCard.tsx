@@ -105,8 +105,10 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
             </label>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm text-morselBrown/80 mb-1">Cookie 1</label>
+                <label htmlFor="hh-cookie-1" className="block text-sm text-morselBrown/80 mb-1">Cookie 1</label>
                 <select
+                  id="hh-cookie-1"
+                  aria-label="Half and Half first cookie flavor"
                   value={halfHalfFirst}
                   onChange={(e) => setHalfHalfFirst(e.target.value)}
                   className="w-full text-base border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
@@ -120,8 +122,10 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
                 </select>
               </div>
               <div>
-                <label className="block text-sm text-morselBrown/80 mb-1">Cookie 2</label>
+                <label htmlFor="hh-cookie-2" className="block text-sm text-morselBrown/80 mb-1">Cookie 2</label>
                 <select
+                  id="hh-cookie-2"
+                  aria-label="Half and Half second cookie flavor"
                   value={halfHalfSecond}
                   onChange={(e) => setHalfHalfSecond(e.target.value)}
                   className="w-full text-base border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"

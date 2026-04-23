@@ -176,10 +176,12 @@ export default function ProductDetailModal({
                       </h3>
                       <div className="grid md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-morselBrown/70 mb-1">
+                          <label htmlFor="modal-hh-cookie-1" className="block text-sm font-medium text-morselBrown/70 mb-1">
                             Cookie 1
                           </label>
                           <select
+                            id="modal-hh-cookie-1"
+                            aria-label="Half and Half first cookie flavor"
                             value={halfHalfFirst}
                             onChange={(e) => setHalfHalfFirst(e.target.value)}
                             className="w-full border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
@@ -193,10 +195,12 @@ export default function ProductDetailModal({
                           </select>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-morselBrown/70 mb-1">
+                          <label htmlFor="modal-hh-cookie-2" className="block text-sm font-medium text-morselBrown/70 mb-1">
                             Cookie 2
                           </label>
                           <select
+                            id="modal-hh-cookie-2"
+                            aria-label="Half and Half second cookie flavor"
                             value={halfHalfSecond}
                             onChange={(e) => setHalfHalfSecond(e.target.value)}
                             className="w-full border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"

@@ -41,26 +41,6 @@ export const metadata = {
   },
 };
 
-// LocalBusiness JSON-LD (Bakery subtype)
-// Address is city/state only — no street address for a home bakery.
-const localBusinessSchema = {
-  "@context": "https://schema.org",
-  "@type": "Bakery",
-  name: "Marilyn's Morsels Bakery",
-  url: "https://marilynsmorsels.com",
-  email: "marilynsmorselsbakery@gmail.com",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Westerville",
-    addressRegion: "OH",
-    addressCountry: "US",
-  },
-  priceRange: "$",
-  servesCuisine: "Bakery",
-  description:
-    "Home bakery in Westerville, Ohio offering small-batch cookies and cookie dough. Order online for local delivery or nationwide cookie shipping.",
-};
-
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const supabase = await createSupabaseServerComponentClient();
   await supabase.auth.getUser();
@@ -68,13 +48,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="bg-morselCream text-morselBrown font-body">
-        {/* JSON-LD LocalBusiness schema — lives in <body> because a manual <head> in App Router
-            can shove metadata-export tags (title, description) into <body>, which Lighthouse flags
-            as a SEO failure. JSON-LD script tags are valid anywhere in the document per Google. */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
-        />
         <SupabaseSessionProvider initialSession={null}>
           <CartProvider>
             <Toaster
