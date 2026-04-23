@@ -14,9 +14,10 @@ module.exports = {
         morselGoldLight: "#E8B875", // Lighter gold for gradients
       },
       fontFamily: {
-        serif: ["Georgia", "Times New Roman", "serif"],
-        display: ["Georgia", "Times New Roman", "serif"], // Serif for headings
-        body: ["system-ui", "-apple-system", "sans-serif"],
+        // next/font CSS variables — set in app/layout.tsx
+        body: ["var(--font-inter)", "system-ui", "-apple-system", "sans-serif"],
+        display: ["var(--font-playfair)", "Georgia", "serif"],
+        serif: ["var(--font-playfair)", "Georgia", "serif"],
       },
       boxShadow: {
         'button': '0 2px 8px rgba(63, 42, 28, 0.2)',
