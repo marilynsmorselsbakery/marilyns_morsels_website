@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useCart } from "./CartProvider";
 import { getProductImage } from "@/lib/product-images";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 type Props = {
   isOpen: boolean;
@@ -13,6 +14,9 @@ type Props = {
 
 export default function CartDrawer({ isOpen, onClose, onCheckout }: Props) {
   const { items, updateQuantity, removeItem, totalCents, itemCount } = useCart();
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(drawerRef, isOpen);
 
   useEffect(() => {
     if (isOpen) {
@@ -45,12 +49,19 @@ export default function CartDrawer({ isOpen, onClose, onCheckout }: Props) {
         aria-hidden="true"
       />
       <div
+        ref={drawerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cart-drawer-heading"
         className={`fixed right-0 top-0 bottom-0 w-full max-w-md bg-white z-50 shadow-2xl transform transition-transform duration-300 ease-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         } flex flex-col`}
       >
         <div className="flex items-center justify-between p-6 border-b border-morselGold/20">
-          <h2 className="text-2xl font-semibold text-morselCocoa">
+          <h2
+            id="cart-drawer-heading"
+            className="text-2xl font-semibold text-morselCocoa"
+          >
             Your Cart ({itemCount})
           </h2>
           <button

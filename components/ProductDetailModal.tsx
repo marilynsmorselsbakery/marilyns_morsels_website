@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { ProductOption } from "@/lib/products";
@@ -8,6 +8,7 @@ import { getFlavorLabel, getPackSizeDisplay } from "@/lib/flavors";
 import { useCart } from "./CartProvider";
 import QuantitySelector from "./QuantitySelector";
 import { getProductImage } from "@/lib/product-images";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 const ingredientLabels: Record<string, { url: string; name: string }> = {
   chocolate_chip: {
@@ -33,6 +34,10 @@ export default function ProductDetailModal({
 }: ProductDetailModalProps) {
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCart();
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(modalRef, isOpen && product !== null);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -43,6 +48,15 @@ export default function ProductDetailModal({
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose]);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -69,13 +83,20 @@ export default function ProductDetailModal({
       onClick={onClose}
     >
       <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="product-modal-heading"
         className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-morselGold/20">
           <div>
-            <h2 className="text-2xl font-display font-bold text-morselCocoa">
+            <h2
+              id="product-modal-heading"
+              className="text-2xl font-display font-bold text-morselCocoa"
+            >
               {product.name}
             </h2>
             <p className="text-sm text-morselBrown/70 mt-1">
