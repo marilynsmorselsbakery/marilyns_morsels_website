@@ -67,15 +67,15 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
-        <h3 className="text-base font-display font-semibold mb-2 text-morselCocoa">
+        <h3 className="text-xl font-display font-semibold mb-2 text-morselCocoa">
           {product.name}
         </h3>
-        <p className="text-sm text-morselBrown/80 mb-4">{product.description}</p>
+        <p className="text-base text-morselBrown/80 mb-4">{product.description}</p>
 
         {/* Size selector */}
         {product.variants.length > 1 && (
           <div className="mb-4">
-            <label className="block text-sm font-semibold text-morselBrown/80 mb-2 uppercase tracking-wide">
+            <label className="block text-base font-semibold text-morselBrown/80 mb-2 uppercase tracking-wide">
               Size
             </label>
             <div className="flex flex-wrap gap-2">
@@ -84,7 +84,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
                   key={v.sku}
                   type="button"
                   onClick={() => setSelectedVariant(v)}
-                  className={`px-4 py-2 text-sm font-semibold rounded-full border transition-all duration-150 ${
+                  className={`px-5 py-2.5 text-base font-semibold rounded-full border transition-all duration-150 ${
                     selectedVariant.sku === v.sku
                       ? "bg-morselCocoa text-white border-morselCocoa"
                       : "border-morselGold/40 text-morselBrown hover:border-morselGold hover:bg-morselGold/10"
@@ -100,16 +100,16 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
         {/* Half & Half picker */}
         {isHalfHalf && (
           <div className="mb-4 space-y-2">
-            <label className="block text-sm font-semibold text-morselBrown/80 uppercase tracking-wide">
+            <label className="block text-base font-semibold text-morselBrown/80 uppercase tracking-wide">
               Pick your 2 flavors
             </label>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm text-morselBrown/70 mb-1">Cookie 1</label>
+                <label className="block text-sm text-morselBrown/80 mb-1">Cookie 1</label>
                 <select
                   value={halfHalfFirst}
                   onChange={(e) => setHalfHalfFirst(e.target.value)}
-                  className="w-full text-sm border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
+                  className="w-full text-base border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
                 >
                   <option value="" disabled>Pick one</option>
                   {HALF_HALF_COOKIE_FLAVORS.map((f) => (
@@ -120,11 +120,11 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
                 </select>
               </div>
               <div>
-                <label className="block text-sm text-morselBrown/70 mb-1">Cookie 2</label>
+                <label className="block text-sm text-morselBrown/80 mb-1">Cookie 2</label>
                 <select
                   value={halfHalfSecond}
                   onChange={(e) => setHalfHalfSecond(e.target.value)}
-                  className="w-full text-sm border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
+                  className="w-full text-base border border-morselGold/40 rounded-lg px-3 py-2 focus:border-morselGold focus:outline-none focus:ring-1 focus:ring-morselGold/30 bg-white"
                 >
                   <option value="" disabled>Pick one</option>
                   {HALF_HALF_COOKIE_FLAVORS.map((f) => (
@@ -140,7 +140,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
       </div>
 
       <div className="flex items-center justify-between pt-4 border-t border-morselGold/10">
-        <div className="text-xl font-display font-bold text-morselCocoa">
+        <div className="text-2xl font-display font-bold text-morselCocoa">
           ${(selectedVariant.priceCents / 100).toFixed(2)}
         </div>
         <div className="flex flex-col gap-2 items-end mr-2">
@@ -159,7 +159,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
                   onInfoClick();
                 }}
                 aria-label={`View details for ${product.name}`}
-                className="px-5 py-2.5 text-sm font-semibold rounded-full border-2 border-morselGold/40 text-morselBrown hover:border-morselGold hover:text-morselGold hover:bg-morselGold/10 transition-all duration-200 hover:scale-[1.02]"
+                className="px-5 py-2.5 text-base font-semibold rounded-full border-2 border-morselGold/40 text-morselBrown hover:border-morselGold hover:text-morselGold hover:bg-morselGold/10 transition-all duration-200 hover:scale-[1.02]"
               >
                 Details
               </button>
@@ -169,7 +169,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
               disabled={halfHalfIncomplete}
               aria-label={`Add to cart: ${product.name} ${selectedVariant.packLabel}`}
               title={halfHalfIncomplete ? "Pick 2 flavors first" : undefined}
-              className="px-5 py-2.5 text-sm font-semibold rounded-full bg-morselCocoa text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="px-5 py-2.5 text-base font-semibold rounded-full bg-morselCocoa text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               Add to Cart
             </button>
