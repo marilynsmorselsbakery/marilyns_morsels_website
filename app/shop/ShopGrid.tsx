@@ -41,7 +41,7 @@ export default function ShopGrid({ products }: Props) {
       <h1 className="text-4xl md:text-5xl font-display font-bold text-morselCocoa mb-3">
         Shop
       </h1>
-      <p className="text-lg text-morselBrown/70 mb-12">
+      <p className="text-lg text-morselBrown/80 mb-12">
         Baked to order in small batches. Please allow a short lead time for freshness.
       </p>
 
@@ -52,7 +52,7 @@ export default function ShopGrid({ products }: Props) {
               {getFlavorLabel(flavor)}
             </h2>
             {getFlavorSubtitle(flavor) && (
-              <p className="text-morselBrown/70 mt-2">
+              <p className="text-morselBrown/80 mt-2">
                 {getFlavorSubtitle(flavor)}
               </p>
             )}

@@ -18,7 +18,7 @@ export default async function BestSellers() {
           <h2 className="text-4xl md:text-5xl font-display font-bold text-morselCocoa mb-4">
             Best-sellers
           </h2>
-          <p className="text-morselBrown/70 text-lg max-w-2xl mx-auto">
+          <p className="text-morselBrown/80 text-lg max-w-2xl mx-auto">
             These are the hits. Start here.
           </p>
         </div>

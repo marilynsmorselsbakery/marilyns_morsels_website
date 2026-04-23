@@ -50,7 +50,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
         <h3 className="text-base font-display font-semibold mb-2 text-morselCocoa">
           {product.name}
         </h3>
-        <p className="text-sm text-morselBrown/70 mb-4">{product.description}</p>
+        <p className="text-sm text-morselBrown/80 mb-4">{product.description}</p>
       </div>
       <div className="flex items-center justify-between pt-4 border-t border-morselGold/10">
         <div className="text-xl font-display font-bold text-morselCocoa">
@@ -71,6 +71,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
                   e.stopPropagation();
                   onInfoClick();
                 }}
+                aria-label={`View details for ${product.name}`}
                 className="px-5 py-2.5 text-sm font-semibold rounded-full border-2 border-morselGold/40 text-morselBrown hover:border-morselGold hover:text-morselGold hover:bg-morselGold/10 transition-all duration-200 hover:scale-[1.02]"
               >
                 Details
@@ -78,6 +79,7 @@ export default function ProductCard({ product, tag, onInfoClick }: ProductCardPr
             )}
             <button
               onClick={handleAddToCart}
+              aria-label={`Add to cart: ${product.name}`}
               className="px-5 py-2.5 text-sm font-semibold rounded-full bg-morselCocoa text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] transition-all duration-200"
             >
               Add to Cart

@@ -45,7 +45,7 @@ export default function HomeCTASection() {
             <h3 className="text-2xl font-display font-bold text-morselCocoa mb-3">
               Order for Yourself
             </h3>
-            <p className="text-morselBrown/70 mb-6">
+            <p className="text-morselBrown/80 mb-6">
               Browse our selection of small-batch cookies, baked fresh to order. Perfect for
               treating yourself or sharing with loved ones.
             </p>
@@ -61,7 +61,7 @@ export default function HomeCTASection() {
             <h3 className="text-2xl font-display font-bold text-morselCocoa mb-3">
               Catering & Events
             </h3>
-            <p className="text-morselBrown/70 mb-6">
+            <p className="text-morselBrown/80 mb-6">
               Need cookies for your office, event, or special occasion? We offer bulk orders
               with custom pricing and flexible lead times.
             </p>
