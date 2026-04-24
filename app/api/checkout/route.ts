@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { getProducts } from "@/lib/products";
-import {
-  createSupabaseRouteHandlerClient,
-  createSupabaseServiceRoleClient,
-} from "@/lib/supabase/server";
-import type { Database } from "@/lib/supabase/types";
+import { createSupabaseRouteHandlerClient } from "@/lib/supabase/server";
 
 const DOMAIN = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -17,21 +13,26 @@ type CartItemPayload = {
   halfHalfChoices?: { first: string; second: string };
 };
 
+/**
+ * Guest-checkout Stripe session creator.
+ *
+ * Auth is OPTIONAL. If the user happens to be signed in, we pass their email
+ * to Stripe to prefill the checkout form; otherwise Stripe collects it. Either
+ * way, Stripe Checkout collects the shipping address directly.
+ *
+ * No Supabase profile or Stripe customer is created here. Post-purchase
+ * bookkeeping (order row, customer linkage) is handled by the Stripe webhook
+ * at /api/webhooks/stripe, which is the correct place for side effects.
+ */
 export async function POST(request: NextRequest) {
   try {
     const stripe = getStripe();
 
+    // Auth is optional — read it if present, but never block on it.
     const supabase = await createSupabaseRouteHandlerClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json(
-        { error: "Authentication required" },
-        { status: 401 }
-      );
-    }
 
     const { items } = (await request.json()) as { items: CartItemPayload[] };
 
@@ -39,112 +40,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
-    const userId = user.id;
-
-    const { data: profileData, error: profileError } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .maybeSingle<Database["public"]["Tables"]["profiles"]["Row"]>();
-
-    if (profileError && profileError.code !== "PGRST116") {
-      console.error("Failed to load profile", profileError);
-      return NextResponse.json(
-        { error: "Unable to start checkout" },
-        { status: 500 }
-      );
-    }
-
-    const serviceSupabase = createSupabaseServiceRoleClient();
-
-    let profile = profileData ?? null;
-
-    if (!profile) {
-      const { data: newProfile, error: createProfileError } =
-        await serviceSupabase
-          .from("profiles")
-          .upsert({
-            id: userId,
-            full_name: user.user_metadata?.full_name ?? null,
-            stripe_customer_id: null,
-            updated_at: new Date().toISOString(),
-          })
-          .select("*")
-          .single<Database["public"]["Tables"]["profiles"]["Row"]>();
-
-      if (createProfileError) {
-        console.error("Failed to create profile record", createProfileError);
-        return NextResponse.json(
-          { error: "Unable to start checkout" },
-          { status: 500 }
-        );
-      }
-
-      profile = newProfile;
-    }
-
-    let stripeCustomerId = profile?.stripe_customer_id ?? null;
-
-    if (!stripeCustomerId) {
-      const customer = await stripe.customers.create({
-        email: user.email ?? undefined,
-        name: profile?.full_name ?? user.email ?? undefined,
-        phone: profile?.phone ?? undefined,
-        address:
-          profile?.address_line1 ||
-          profile?.city ||
-          profile?.state ||
-          profile?.postal_code
-            ? {
-                line1: profile?.address_line1 ?? undefined,
-                line2: profile?.address_line2 ?? undefined,
-                city: profile?.city ?? undefined,
-                state: profile?.state ?? undefined,
-                postal_code: profile?.postal_code ?? undefined,
-                country: "US",
-              }
-            : undefined,
-        metadata: {
-          supabase_user_id: userId,
-        },
-      });
-
-      stripeCustomerId = customer.id;
-
-      const { data: updatedProfile, error: updateProfileError } =
-        await serviceSupabase
-          .from("profiles")
-          .upsert({
-            id: userId,
-            full_name: profile?.full_name ?? user.email ?? null,
-            phone: profile?.phone ?? null,
-            address_line1: profile?.address_line1 ?? null,
-            address_line2: profile?.address_line2 ?? null,
-            city: profile?.city ?? null,
-            state: profile?.state ?? null,
-            postal_code: profile?.postal_code ?? null,
-            stripe_customer_id: stripeCustomerId,
-            updated_at: new Date().toISOString(),
-          })
-          .select("*")
-          .single<Database["public"]["Tables"]["profiles"]["Row"]>();
-
-      if (updateProfileError) {
-        console.error("Failed to persist Stripe customer ID", updateProfileError);
-        return NextResponse.json(
-          { error: "Unable to start checkout" },
-          { status: 500 }
-        );
-      }
-
-      profile = updatedProfile;
-    }
-
-    // Re-fetch products and build flavor → variant lookup
+    // Re-fetch products and build flavor → variant lookup so we pay the
+    // current Stripe price, not whatever the client-side cart cached.
     const allProducts = await getProducts();
     const productByFlavor = new Map(allProducts.map((p) => [p.flavor, p]));
 
-    // Collect H&H metadata entries to pass on the session
+    // Collect H&H metadata entries to pass on the session.
     const halfHalfMeta: Record<string, string> = {};
     let halfHalfIdx = 0;
 
@@ -161,7 +62,6 @@ export async function POST(request: NextRequest) {
           return null;
         }
 
-        // Attach H&H choices to session metadata
         if (item.halfHalfChoices) {
           halfHalfMeta[`halfHalf_${halfHalfIdx}_sku`] = item.sku;
           halfHalfMeta[`halfHalf_${halfHalfIdx}_first`] =
@@ -191,20 +91,20 @@ export async function POST(request: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      customer: stripeCustomerId ?? undefined,
+      // Prefill the email for logged-in users; Stripe collects it for guests.
+      customer_email: user?.email ?? undefined,
       line_items: lineItems,
       shipping_address_collection: {
         allowed_countries: ["US"],
-      },
-      customer_update: {
-        shipping: "auto",
-        address: "auto",
       },
       success_url: `${DOMAIN}/success`,
       cancel_url: `${DOMAIN}/cancel`,
       metadata: {
         skus: skuList,
-        supabase_user_id: userId,
+        // Only set supabase_user_id for logged-in users — the orders table
+        // has a UUID foreign key on this column, so passing "guest" would
+        // violate the constraint. Missing metadata → null in the webhook.
+        ...(user?.id ? { supabase_user_id: user.id } : {}),
         ...halfHalfMeta,
       },
     });

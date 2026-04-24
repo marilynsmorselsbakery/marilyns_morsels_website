@@ -39,11 +39,9 @@ export default function Navbar() {
   };
 
   const handleCheckout = async () => {
+    // Guest checkout — no login required. The /checkout review page handles
+    // the Stripe session creation for both logged-in and guest users.
     setIsCartOpen(false);
-    if (!session) {
-      router.push("/login?redirectTo=/shop");
-      return;
-    }
     router.push("/checkout");
   };
 

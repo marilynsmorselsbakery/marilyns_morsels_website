@@ -5,32 +5,21 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useCart } from "@/components/CartProvider";
-import { useSupabaseSession } from "@/components/SupabaseSessionProvider";
 import { getProductImage } from "@/lib/product-images";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const session = useSupabaseSession();
   const { items, totalCents, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    if (!session) {
-      router.push("/login?redirectTo=/checkout");
-      return;
-    }
+    // Guest checkout — no login required. Just redirect if cart is empty.
     if (items.length === 0) {
       router.push("/shop");
-      return;
     }
-  }, [session, items, router]);
+  }, [items, router]);
 
   const handleCheckout = async () => {
-    if (!session) {
-      router.push("/login?redirectTo=/checkout");
-      return;
-    }
-
     setIsProcessing(true);
 
     try {
@@ -62,7 +51,7 @@ export default function CheckoutPage() {
     }
   };
 
-  if (!session || items.length === 0) {
+  if (items.length === 0) {
     return null;
   }
 
