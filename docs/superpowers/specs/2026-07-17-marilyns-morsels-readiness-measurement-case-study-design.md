@@ -41,7 +41,7 @@ The written agreement excludes redesign and general code repairs, but the contro
 ### In scope
 
 - Measurement-property creation and ownership setup.
-- Google Tag Manager installation and event data-layer integration.
+- Google Tag Manager installation and a code-owned event data layer, with GA4 and Microsoft Clarity deployed through the client-owned GTM container.
 - GA4 ecommerce, lead, and supporting-event instrumentation.
 - Microsoft Clarity installation and useful custom-event integration where supported.
 - Google Search Console verification, sitemap submission, and baseline capture.
@@ -69,9 +69,9 @@ The client Gmail account, `marilynsmorselsbakery@gmail.com`, is the permanent ow
 
 Property/account inventory:
 
-- Google Tag Manager container
-- GA4 property and web data stream
-- Microsoft Clarity project
+- Google Tag Manager web container
+- GA4 property and web data stream (`G-BRH7YWV7C6`)
+- Microsoft Clarity project (`x0egiy5fhb`)
 - Google Search Console domain or URL-prefix property
 - Existing Vercel Analytics and Speed Insights
 
@@ -102,6 +102,8 @@ flowchart LR
 
 - Measurement failure must never prevent browsing, cart use, checkout, or payment.
 - Analytics tags load only according to the implemented consent state.
+- Only the GTM container snippet is installed in the application. The GA4 measurement ID and Clarity project ID are configured inside GTM so tracking scripts are not duplicated in page files.
+- One typed event interface pushes only approved, non-PII event names and parameters to `dataLayer`; GTM routes those events to each permitted analytics destination.
 - No card data, customer names, street addresses, email addresses, free-form inquiry text, or other personally identifiable information is sent to analytics.
 - `purchase` is emitted only after Stripe verifies the Checkout Session.
 - Reloading or revisiting the success page must not create a duplicate purchase event.
@@ -327,7 +329,7 @@ Required verification before production handoff:
 - Responsive screenshots at the defined viewport set
 - Keyboard, focus, dialog, form-label, and touch-target smoke checks
 - Metadata, canonical, robots, sitemap, and structured-data inspection
-- Google Tag Manager preview or equivalent tag validation
+- Google Tag Assistant plus GA4 Realtime/DebugView validation
 - GA4 Realtime/DebugView event verification
 - Clarity installation and permitted event verification
 - Search Console ownership and sitemap verification
@@ -368,6 +370,7 @@ No public material may invent traffic, revenue, customers, conversion lift, stat
 ## 19. Approved Decisions
 
 - Client-owned analytics/search properties: approved.
+- Google Tag Manager as the central tag-deployment and consent-control hub for GA4 and Microsoft Clarity: approved. GA4 remains the traffic/funnel reporting dashboard, and Clarity remains the recordings/heatmaps dashboard.
 - Primary conversion is verified online purchase: approved.
 - Secondary conversion is successful bulk-order inquiry: approved.
 - One authorized live purchase followed by refund: approved.
