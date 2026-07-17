@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run"
   },
   "dependencies": {
+    "@next/third-parties": "^16.2.10",
     "@radix-ui/react-dialog": "^1.1.15",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.81.0",
@@ -32,6 +34,7 @@
     "eslint-config-next": "^16.0.7",
     "pdf-poppler": "^0.2.3",
     "supabase": "^2.65.7",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
   }
 }
