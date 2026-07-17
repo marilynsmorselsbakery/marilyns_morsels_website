@@ -9,11 +9,15 @@ import {
   type ReactNode,
 } from "react";
 import type { ProductVariant, Product } from "@/lib/products";
+import { track } from "@/lib/analytics/client";
+import { ecommerceValue, productAnalyticsItem } from "@/lib/analytics/items";
 
 export type CartItem = {
   sku: string;                  // variant SKU, e.g. "cc-6"
   flavorId: string;             // flavor slug, e.g. "chocolate_chip"
   name: string;                 // "Old Fashion Chocolate Chip — Half-Dozen"
+  analyticsName: string;        // flavor-level name without pack-size snapshot
+  category?: "cookie" | "dough";
   priceCents: number;
   quantity: number;
   stripePriceId: string;        // used at checkout
@@ -62,7 +66,17 @@ const loadCartFromStorage = (): CartItem[] => {
           typeof item.priceCents === "number" &&
           typeof item.stripePriceId === "string" &&
           item.quantity > 0
-      );
+      ).map((item) => ({
+        ...item,
+        analyticsName:
+          typeof item.analyticsName === "string"
+            ? item.analyticsName
+            : item.name.split(" — ")[0],
+        category:
+          item.category === "cookie" || item.category === "dough"
+            ? item.category
+            : undefined,
+      }));
     }
     return [];
   } catch {
@@ -93,6 +107,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
       quantity: number = 1,
       halfHalfChoices?: { first: string; second: string }
     ) => {
+      const analyticsProduct = productAnalyticsItem(product, variant, quantity);
+      track({
+        event: "add_to_cart",
+        ecommerce: {
+          currency: "USD",
+          value: ecommerceValue([analyticsProduct]),
+          items: [analyticsProduct],
+        },
+      });
       setItems((prev) => {
         const newItemKey = cartRowKey({ sku: variant.sku, halfHalfChoices });
         const existing = prev.find((item) => cartRowKey(item) === newItemKey);
@@ -107,6 +130,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
           sku: variant.sku,
           flavorId: product.flavor,
           name: `${product.name} — ${variant.packLabel}`,
+          analyticsName: product.name,
+          category: product.category,
           priceCents: variant.priceCents,
           quantity,
           stripePriceId: variant.stripePriceId,

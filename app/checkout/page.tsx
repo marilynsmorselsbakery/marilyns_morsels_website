@@ -6,6 +6,9 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { useCart } from "@/components/CartProvider";
 import { getProductImage } from "@/lib/product-images";
+import { track } from "@/lib/analytics/client";
+import { getAnalyticsContext } from "@/lib/analytics/consent";
+import { cartAnalyticsItem, ecommerceValue } from "@/lib/analytics/items";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -21,17 +24,27 @@ export default function CheckoutPage() {
 
   const handleCheckout = async () => {
     setIsProcessing(true);
+    const analyticsItems = items.map(cartAnalyticsItem);
+    track({
+      event: "begin_checkout",
+      ecommerce: {
+        currency: "USD",
+        value: ecommerceValue(analyticsItems),
+        items: analyticsItems,
+      },
+    });
 
     try {
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ items, analytics: getAnalyticsContext() }),
       });
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
         toast.error(data.error || "Something went wrong starting checkout. Please try again.");
+        track({ event: "checkout_error", error_code: "request_failed" });
         setIsProcessing(false);
         return;
       }
@@ -42,11 +55,13 @@ export default function CheckoutPage() {
         window.location.href = data.url;
       } else {
         toast.error("No checkout URL received. Please try again.");
+        track({ event: "checkout_error", error_code: "invalid_response" });
         setIsProcessing(false);
       }
     } catch (error) {
       console.error("Checkout error", error);
       toast.error("Something went wrong. Please try again.");
+      track({ event: "checkout_error", error_code: "network_error" });
       setIsProcessing(false);
     }
   };

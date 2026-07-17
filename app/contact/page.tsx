@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import TrackedContactLink from "@/components/analytics/TrackedContactLink";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -21,12 +22,13 @@ export default function ContactPage() {
         <p className="text-sm font-semibold text-morselBrown/60 uppercase tracking-widest mb-3">
           Fastest way to reach us
         </p>
-        <a
+        <TrackedContactLink
           href="mailto:marilynsmorselsbakery@gmail.com"
+          method="email"
           className="inline-block text-xl md:text-2xl font-display font-semibold text-morselGold hover:text-morselCocoa transition-colors duration-200 break-all"
         >
           marilynsmorselsbakery@gmail.com
-        </a>
+        </TrackedContactLink>
         <p className="mt-4 text-sm text-morselBrown/60">
           We typically respond within 24 hours.
         </p>

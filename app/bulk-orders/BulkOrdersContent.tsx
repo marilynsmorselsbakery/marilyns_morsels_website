@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useParallax } from "@/hooks/useParallax";
 import milkStack from "@/assets/milk_stack.png";
 import plateStack from "@/assets/plate_stack.png";
+import { track } from "@/lib/analytics/client";
 
 export default function BulkOrdersContent() {
   const [status, setStatus] = useState<"idle" | "submitting" | "sent" | "error">("idle");
@@ -26,6 +27,9 @@ export default function BulkOrdersContent() {
     });
 
     setStatus(response.ok ? "sent" : "error");
+    if (response.ok) {
+      track({ event: "generate_lead", lead_type: "bulk_order" });
+    }
   };
 
   return (

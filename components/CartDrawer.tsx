@@ -5,6 +5,9 @@ import Image from "next/image";
 import { useCart, cartRowKey } from "./CartProvider";
 import { getProductImage } from "@/lib/product-images";
 import { getHalfHalfLabel } from "@/lib/flavors";
+import { useEffect, useRef } from "react";
+import { track } from "@/lib/analytics/client";
+import { cartAnalyticsItem, ecommerceValue } from "@/lib/analytics/items";
 
 type Props = {
   isOpen: boolean;
@@ -14,6 +17,22 @@ type Props = {
 
 export default function CartDrawer({ isOpen, onClose, onCheckout }: Props) {
   const { items, updateQuantity, removeItem, totalCents, itemCount } = useCart();
+  const wasOpen = useRef(false);
+
+  useEffect(() => {
+    if (isOpen && !wasOpen.current && items.length > 0) {
+      const analyticsItems = items.map(cartAnalyticsItem);
+      track({
+        event: "view_cart",
+        ecommerce: {
+          currency: "USD",
+          value: ecommerceValue(analyticsItems),
+          items: analyticsItems,
+        },
+      });
+    }
+    wasOpen.current = isOpen;
+  }, [isOpen, items]);
 
   return (
     <Dialog.Root

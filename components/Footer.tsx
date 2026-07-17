@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CookieSettingsButton from "./analytics/CookieSettingsButton";
+import TrackedContactLink from "./analytics/TrackedContactLink";
 
 const policyLinks = [
   { href: "/shipping", label: "Shipping" },
@@ -23,12 +24,13 @@ export default function Footer() {
             </p>
             <p className="text-sm text-morselBrown/70 mt-1">
               Westerville, OH &nbsp;&middot;&nbsp;
-              <a
+              <TrackedContactLink
                 href="mailto:marilynsmorselsbakery@gmail.com"
+                method="email"
                 className="hover:text-morselGold transition-colors duration-150"
               >
                 marilynsmorselsbakery@gmail.com
-              </a>
+              </TrackedContactLink>
             </p>
             <p className="text-xs text-morselBrown/80 mt-1">
               Baked with care in our licensed home kitchen.

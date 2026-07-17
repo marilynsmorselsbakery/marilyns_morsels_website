@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
 import toast from "react-hot-toast";
@@ -9,6 +9,8 @@ import { getFlavorLabel, getPackSizeDisplay, HALF_HALF_COOKIE_FLAVORS, getHalfHa
 import { useCart } from "./CartProvider";
 import QuantitySelector from "./QuantitySelector";
 import { getProductImage } from "@/lib/product-images";
+import { track } from "@/lib/analytics/client";
+import { ecommerceValue, productAnalyticsItem } from "@/lib/analytics/items";
 
 const ingredientLabels: Record<string, { url: string; name: string }> = {
   chocolate_chip: {
@@ -80,6 +82,20 @@ export default function ProductDetailModal({
       : null;
   const aboutLabel =
     product?.category === "dough" ? "About This Dough" : "About This Cookie";
+
+  useEffect(() => {
+    const variant = product?.variants[0];
+    if (!open || !product || !variant) return;
+    const item = productAnalyticsItem(product, variant);
+    track({
+      event: "view_item",
+      ecommerce: {
+        currency: "USD",
+        value: ecommerceValue([item]),
+        items: [item],
+      },
+    });
+  }, [open, product]);
 
   return (
     <Dialog.Root

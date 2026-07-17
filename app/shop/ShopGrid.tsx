@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import ProductDetailModal from "@/components/ProductDetailModal";
 import type { Product } from "@/lib/products";
+import { track } from "@/lib/analytics/client";
+import { ecommerceValue, productAnalyticsItem } from "@/lib/analytics/items";
 
 type Props = {
   products: Product[];
@@ -13,7 +15,39 @@ export default function ShopGrid({ products }: Props) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  useEffect(() => {
+    const items = products.flatMap((product) => {
+      const variant = product.variants[0];
+      return variant ? [productAnalyticsItem(product, variant)] : [];
+    });
+    if (items.length === 0) return;
+    track({
+      event: "view_item_list",
+      ecommerce: {
+        currency: "USD",
+        value: ecommerceValue(items),
+        item_list_id: "shop_catalog",
+        item_list_name: "Shop catalog",
+        items,
+      },
+    });
+  }, [products]);
+
   const openProductModal = (product: Product) => {
+    const variant = product.variants[0];
+    if (variant) {
+      const item = productAnalyticsItem(product, variant);
+      track({
+        event: "select_item",
+        ecommerce: {
+          currency: "USD",
+          value: ecommerceValue([item]),
+          item_list_id: "shop_catalog",
+          item_list_name: "Shop catalog",
+          items: [item],
+        },
+      });
+    }
     setSelectedProduct(product);
     setIsModalOpen(true);
   };
