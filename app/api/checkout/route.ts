@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { getProducts } from "@/lib/products";
 import { createSupabaseRouteHandlerClient } from "@/lib/supabase/server";
+import type { AnalyticsCheckoutContext } from "@/lib/analytics/types";
 
 const DOMAIN = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -12,6 +13,18 @@ type CartItemPayload = {
   priceCents: number;
   halfHalfChoices?: { first: string; second: string };
 };
+
+const ANALYTICS_CLIENT_ID_PATTERN = /^[A-Za-z0-9._-]{8,128}$/;
+
+function validAnalyticsContext(value: unknown): value is AnalyticsCheckoutContext {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Partial<AnalyticsCheckoutContext>;
+  return (
+    candidate.consent === true &&
+    typeof candidate.clientId === "string" &&
+    ANALYTICS_CLIENT_ID_PATTERN.test(candidate.clientId)
+  );
+}
 
 /**
  * Guest-checkout Stripe session creator.
@@ -34,7 +47,10 @@ export async function POST(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const { items } = (await request.json()) as { items: CartItemPayload[] };
+    const { items, analytics } = (await request.json()) as {
+      items: CartItemPayload[];
+      analytics?: unknown;
+    };
 
     if (!Array.isArray(items) || items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
@@ -97,7 +113,7 @@ export async function POST(request: NextRequest) {
       shipping_address_collection: {
         allowed_countries: ["US"],
       },
-      success_url: `${DOMAIN}/success`,
+      success_url: `${DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${DOMAIN}/cancel`,
       metadata: {
         skus: skuList,
@@ -105,6 +121,12 @@ export async function POST(request: NextRequest) {
         // has a UUID foreign key on this column, so passing "guest" would
         // violate the constraint. Missing metadata → null in the webhook.
         ...(user?.id ? { supabase_user_id: user.id } : {}),
+        ...(validAnalyticsContext(analytics)
+          ? {
+              analytics_consent: "granted",
+              ga_client_id: analytics.clientId,
+            }
+          : {}),
         ...halfHalfMeta,
       },
     });

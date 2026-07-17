@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
+import { sendGa4Purchase, type Ga4PurchaseItem } from "@/lib/analytics/server";
 
 export const runtime = "nodejs";
 
@@ -13,13 +14,16 @@ const stripe = stripeSecretKey
     })
   : null;
 
-async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+async function handleCheckoutCompleted(
+  stripeClient: Stripe,
+  session: Stripe.Checkout.Session
+) {
   const supabase = createSupabaseServiceRoleClient();
-  const productIds = session.metadata?.productIds ?? null;
+  const productIds = session.metadata?.skus ?? null;
   const supabaseUserId = session.metadata?.supabase_user_id ?? null;
 
-  try {
-    await supabase.from("orders").insert({
+  const { error } = await supabase.from("orders").upsert(
+    {
       id: session.id,
       supabase_user_id: supabaseUserId,
       product_ids: productIds,
@@ -28,10 +32,50 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       payment_status: session.payment_status ?? session.status ?? null,
       stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
       created_at: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error("Failed to persist order from webhook", error);
+    },
+    { onConflict: "id" }
+  );
+
+  if (error) {
+    throw new Error("Order persistence failed");
   }
+
+  const lineItems = await stripeClient.checkout.sessions.listLineItems(session.id, {
+    limit: 100,
+    expand: ["data.price.product"],
+  });
+
+  const analyticsItems: Ga4PurchaseItem[] = lineItems.data.flatMap((lineItem) => {
+    const quantity = lineItem.quantity ?? 1;
+    const price = lineItem.price;
+    const product = price?.product;
+    const itemId =
+      typeof product === "string"
+        ? product
+        : product?.id ?? price?.id ?? lineItem.id;
+
+    if (!lineItem.description || !price) return [];
+    return [
+      {
+        item_id: itemId,
+        item_name: lineItem.description,
+        item_variant: price.id,
+        price: Number(((lineItem.amount_total ?? 0) / quantity / 100).toFixed(2)),
+        quantity,
+      },
+    ];
+  });
+
+  await sendGa4Purchase({
+    consent:
+      session.payment_status === "paid" &&
+      session.metadata?.analytics_consent === "granted",
+    clientId: session.metadata?.ga_client_id,
+    transactionId: session.id,
+    valueCents: session.amount_total ?? 0,
+    currency: session.currency ?? "usd",
+    items: analyticsItems,
+  });
 }
 
 export async function POST(req: NextRequest) {
@@ -59,7 +103,7 @@ export async function POST(req: NextRequest) {
   try {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
-      await handleCheckoutCompleted(session);
+      await handleCheckoutCompleted(stripe, session);
     }
   } catch (error) {
     console.error("Stripe webhook handler error", error);
