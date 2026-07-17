@@ -39,6 +39,12 @@ Stripe + base URL:
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 - `NEXT_PUBLIC_BASE_URL` (e.g., `http://localhost:3000` for dev, `https://marilynsmorsels.com` for prod)
 
+Analytics:
+
+- `NEXT_PUBLIC_GTM_ID` — client-owned Google Tag Manager web container ID
+- `GA4_MEASUREMENT_ID` — server-only GA4 web-stream ID used for verified purchases
+- `GA4_API_SECRET` — server-only GA4 Measurement Protocol secret
+
 Never commit real keys. `.env.local` is gitignored.
 
 ## Scripts

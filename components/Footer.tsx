@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CookieSettingsButton from "./analytics/CookieSettingsButton";
 
 const policyLinks = [
   { href: "/shipping", label: "Shipping" },
@@ -48,6 +49,9 @@ export default function Footer() {
                 </Link>
               </li>
             ))}
+            <li>
+              <CookieSettingsButton />
+            </li>
           </ul>
         </nav>
 

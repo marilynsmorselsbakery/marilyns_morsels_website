@@ -13,7 +13,7 @@ export default function PrivacyPage() {
       <h1 className="text-3xl md:text-4xl font-display font-bold text-morselCocoa mb-6">
         Privacy Policy
       </h1>
-      <p className="text-sm text-morselBrown/60 mb-2">Last updated: April 23, 2026</p>
+      <p className="text-sm text-morselBrown/60 mb-2">Last updated: July 17, 2026</p>
       <p className="text-xs text-morselBrown/80 mb-10 italic">
         This is a working privacy policy drafted for operational use. It is not legal advice.
         Consult a qualified attorney before relying on this document for regulatory compliance.
@@ -45,9 +45,10 @@ export default function PrivacyPage() {
               card number; Stripe handles payment processing directly.
             </li>
             <li>
-              <strong>Usage data</strong> — aggregate, anonymized page-view data collected via
-              Vercel Analytics (cookieless, privacy-friendly). No personal identifiers are
-              included.
+              <strong>Usage data</strong> — page views, device and browser details, traffic source,
+              shopping interactions, and session behavior collected through Vercel Analytics and,
+              with your permission, Google Analytics and Microsoft Clarity. We do not intentionally
+              include personal identifiers in analytics events.
             </li>
           </ul>
         </div>
@@ -89,6 +90,16 @@ export default function PrivacyPage() {
               <strong>Vercel</strong> — website hosting and cookieless analytics. No personal
               data is included in analytics events.
             </li>
+            <li>
+              <strong>Google Analytics and Google Tag Manager</strong> — consent-controlled website
+              and shopping-funnel measurement. Advertising storage and personalization remain
+              disabled.
+            </li>
+            <li>
+              <strong>Microsoft Clarity</strong> — consent-controlled heatmaps and session
+              recordings used to identify navigation and usability problems. Sensitive form and
+              checkout content is excluded or masked.
+            </li>
           </ul>
           <p className="mt-3">
             We do not sell, rent, or share your personal information with advertisers or
@@ -101,9 +112,11 @@ export default function PrivacyPage() {
             Cookies
           </h2>
           <p>
-            Our site uses session cookies for authentication (keeping you logged in). We do not
-            use advertising cookies or third-party tracking cookies. Vercel Analytics is
-            cookieless.
+            Our site uses essential storage for authentication and the shopping cart. Vercel
+            Analytics is cookieless. Google Analytics and Microsoft Clarity load only after you
+            accept analytics through the site&apos;s privacy choices. You can change that choice at
+            any time using the Cookie settings link in the footer. We do not enable advertising
+            cookies or ad personalization.
           </p>
         </div>
 

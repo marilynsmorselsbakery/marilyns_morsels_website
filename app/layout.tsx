@@ -8,6 +8,9 @@ import { CartProvider } from "@/components/CartProvider";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleTagManager } from "@next/third-parties/google";
+import ConsentDefaults from "@/components/analytics/ConsentDefaults";
+import AnalyticsConsent from "@/components/analytics/AnalyticsConsent";
 
 // next/font: self-hosted, font-display: swap, zero layout shift
 const inter = Inter({
@@ -46,6 +49,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   // was preventing React 19 from auto-hoisting <title>/<meta> tags to <head>.
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <head>
+        <ConsentDefaults />
+      </head>
       <body className="bg-morselCream text-morselBrown font-body">
         <SupabaseSessionProvider initialSession={null}>
           <CartProvider>
@@ -80,8 +86,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </div>
             <Analytics />
             <SpeedInsights />
+            <AnalyticsConsent />
           </CartProvider>
         </SupabaseSessionProvider>
+        {process.env.NEXT_PUBLIC_GTM_ID ? (
+          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+        ) : null}
       </body>
     </html>
   );
