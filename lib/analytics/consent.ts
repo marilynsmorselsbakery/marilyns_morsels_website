@@ -30,7 +30,10 @@ function pushConsentUpdate(choice: ConsentChoice): void {
   if (typeof window === "undefined") return;
   const analyticsWindow = window as Window & { dataLayer?: unknown[] };
   analyticsWindow.dataLayer = analyticsWindow.dataLayer || [];
-  analyticsWindow.dataLayer.push(["consent", "update", consentSettings(choice)]);
+  function gtag(..._args: unknown[]) {
+    analyticsWindow.dataLayer?.push(arguments);
+  }
+  gtag("consent", "update", consentSettings(choice));
   analyticsWindow.dataLayer.push({ event: "analytics_consent_updated", consent: choice });
 }
 

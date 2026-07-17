@@ -3,6 +3,7 @@ import {
   consentSettings,
   getAnalyticsContext,
   parseConsentChoice,
+  setConsentChoice,
 } from "./consent";
 
 function memoryStorage() {
@@ -42,6 +43,25 @@ describe("analytics consent", () => {
     vi.stubGlobal("window", { localStorage });
 
     expect(getAnalyticsContext()).toBeNull();
+  });
+
+  it("pushes consent updates in the gtag command format", () => {
+    const localStorage = memoryStorage();
+    const dataLayer: unknown[] = [];
+    vi.stubGlobal("window", { localStorage, dataLayer });
+
+    setConsentChoice("granted");
+
+    expect(Object.prototype.toString.call(dataLayer[0])).toBe("[object Arguments]");
+    expect(Array.from(dataLayer[0] as IArguments)).toEqual([
+      "consent",
+      "update",
+      consentSettings("granted"),
+    ]);
+    expect(dataLayer[1]).toEqual({
+      event: "analytics_consent_updated",
+      consent: "granted",
+    });
   });
 
   it("creates and reuses a pseudonymous client id after consent", () => {
