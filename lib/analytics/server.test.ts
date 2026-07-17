@@ -48,13 +48,13 @@ describe("GA4 verified purchase measurement", () => {
   });
 
   it("posts the event only when both server credentials are present", async () => {
-    vi.stubEnv("GA4_MEASUREMENT_ID", "G-BRH7YWV7C6");
+    vi.stubEnv("GA4_MEASUREMENT_ID", "G-BRH7YVV7C6");
     vi.stubEnv("GA4_API_SECRET", "secret-value");
     const request = vi.fn().mockResolvedValue({ ok: true });
 
     await expect(sendGa4Purchase(purchase, request)).resolves.toBe("sent");
     expect(request).toHaveBeenCalledWith(
-      "https://www.google-analytics.com/mp/collect?measurement_id=G-BRH7YWV7C6&api_secret=secret-value",
+      "https://www.google-analytics.com/mp/collect?measurement_id=G-BRH7YVV7C6&api_secret=secret-value",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -70,7 +70,7 @@ describe("GA4 verified purchase measurement", () => {
   });
 
   it("throws on a failed Measurement Protocol response so Stripe can retry", async () => {
-    vi.stubEnv("GA4_MEASUREMENT_ID", "G-BRH7YWV7C6");
+    vi.stubEnv("GA4_MEASUREMENT_ID", "G-BRH7YVV7C6");
     vi.stubEnv("GA4_API_SECRET", "secret-value");
     const request = vi.fn().mockResolvedValue({ ok: false, status: 503 });
 

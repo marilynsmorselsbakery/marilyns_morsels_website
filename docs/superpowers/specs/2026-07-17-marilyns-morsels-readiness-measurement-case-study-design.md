@@ -70,8 +70,8 @@ The client Gmail account, `marilynsmorselsbakery@gmail.com`, is the permanent ow
 Property/account inventory:
 
 - Google Tag Manager web container
-- GA4 property and web data stream (`G-BRH7YWV7C6`)
-- Microsoft Clarity project (`x0egiy5fhb`)
+- GA4 property and web data stream (`G-BRH7YVV7C6`)
+- Microsoft Clarity project (`xo0giy5fnb`)
 - Google Search Console domain or URL-prefix property
 - Existing Vercel Analytics and Speed Insights
 

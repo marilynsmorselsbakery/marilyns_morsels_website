@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - Permanent property ownership stays with `marilynsmorselsbakery@gmail.com`.
-- GA4 measurement ID is `G-BRH7YWV7C6`; Clarity project ID is `x0egiy5fhb`.
+- GA4 measurement ID is `G-BRH7YVV7C6`; Clarity project ID is `xo0giy5fnb`.
 - GTM is the only browser tag loader; do not install direct GA4 or Clarity snippets/packages.
 - No name, email, phone, address, inquiry text, card data, or other PII enters `dataLayer`, GA4, or Clarity.
 - Analytics failure must never block browsing, cart, checkout, payment, webhook persistence, or customer messaging.
@@ -125,10 +125,10 @@
 - Produces: a published GTM web container ID, GA4 API secret stored only in Vercel, published GTM container version, and verified production events.
 
 - [ ] In the client Google account, create a GTM Web container for `marilynsmorsels.com`, add Michael as administrator where supported, and store the returned `GTM-...` ID in Vercel as `NEXT_PUBLIC_GTM_ID` for Production, Preview, and Development.
-- [ ] In GTM, create the Google tag with `G-BRH7YWV7C6` on Initialization — All Pages, requiring analytics consent.
-- [ ] Install Clarity project `x0egiy5fhb` through Microsoft's GTM integration or official template and require `analytics_storage` consent.
+- [x] In GTM, create the Google tag with `G-BRH7YVV7C6` on Initialization — All Pages with Google Consent Mode.
+- [x] Install Clarity project `xo0giy5fnb` through GTM and require `analytics_storage` consent.
 - [ ] Create GA4 Event tags for every approved `dataLayer` event, with ecommerce data enabled and custom error/contact parameters restricted to the allowlist.
-- [ ] In GA4, create a Measurement Protocol API secret; store it in Vercel as `GA4_API_SECRET`, and store `G-BRH7YWV7C6` as server-only `GA4_MEASUREMENT_ID`.
+- [ ] In GA4, create a Measurement Protocol API secret; store it in Vercel as `GA4_API_SECRET`, and store `G-BRH7YVV7C6` as server-only `GA4_MEASUREMENT_ID`.
 - [ ] Use GTM Preview/Tag Assistant to verify denied consent blocks GA4 and Clarity, acceptance fires both, decline keeps both blocked, and no event contains PII.
 - [ ] Publish a named GTM container version and deploy the code through the repository's `main` branch.
 - [ ] Verify production page views and funnel events in GA4 Realtime/DebugView, verify Clarity `collect` requests and dashboard activity, and perform one authorized live Stripe purchase/refund to verify deduplicated `purchase`.
