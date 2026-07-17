@@ -1,18 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Resend } from "resend";
 import Stripe from "stripe";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { sendGa4Purchase, type Ga4PurchaseItem } from "@/lib/analytics/server";
+import { sendOrderEmails } from "@/lib/email/order";
+import { createResendOrderEmailSender } from "@/lib/email/resend";
+import { buildOrderEmailData } from "@/lib/email/stripe-order";
 
 export const runtime = "nodejs";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+const resendApiKey = process.env.RESEND_API_KEY;
+const orderEmailFrom =
+  process.env.ORDER_EMAIL_FROM ??
+  "Marilyn's Morsels <orders@marilynsmorsels.com>";
+const orderNotificationTo =
+  process.env.ORDER_NOTIFICATION_TO ?? "marilynsmorselsbakery@gmail.com";
 
 const stripe = stripeSecretKey
   ? new Stripe(stripeSecretKey, {
       apiVersion: "2025-11-17.clover" as Stripe.LatestApiVersion,
     })
   : null;
+
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 async function handleCheckoutCompleted(
   stripeClient: Stripe,
@@ -44,6 +56,19 @@ async function handleCheckoutCompleted(
     limit: 100,
     expand: ["data.price.product"],
   });
+
+  if (!resend) {
+    throw new Error("Order email configuration is missing");
+  }
+
+  await sendOrderEmails(
+    buildOrderEmailData(session, lineItems),
+    createResendOrderEmailSender(resend),
+    {
+      from: orderEmailFrom,
+      businessEmail: orderNotificationTo,
+    }
+  );
 
   const analyticsItems: Ga4PurchaseItem[] = lineItems.data.flatMap((lineItem) => {
     const quantity = lineItem.quantity ?? 1;
