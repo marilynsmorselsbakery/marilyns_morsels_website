@@ -58,17 +58,19 @@ async function handleCheckoutCompleted(
   });
 
   if (!resend) {
-    throw new Error("Order email configuration is missing");
+    // Keep checkout processing healthy during initial provisioning. Provider
+    // failures still throw below so Stripe can retry once email is configured.
+    console.error("Order email configuration is missing");
+  } else {
+    await sendOrderEmails(
+      buildOrderEmailData(session, lineItems),
+      createResendOrderEmailSender(resend),
+      {
+        from: orderEmailFrom,
+        businessEmail: orderNotificationTo,
+      }
+    );
   }
-
-  await sendOrderEmails(
-    buildOrderEmailData(session, lineItems),
-    createResendOrderEmailSender(resend),
-    {
-      from: orderEmailFrom,
-      businessEmail: orderNotificationTo,
-    }
-  );
 
   const analyticsItems: Ga4PurchaseItem[] = lineItems.data.flatMap((lineItem) => {
     const quantity = lineItem.quantity ?? 1;
