@@ -3,7 +3,7 @@ import CookieSettingsButton from "./analytics/CookieSettingsButton";
 import TrackedContactLink from "./analytics/TrackedContactLink";
 
 const policyLinks = [
-  { href: "/shipping", label: "Shipping" },
+  { href: "/shipping", label: "Delivery" },
   { href: "/returns", label: "Returns" },
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },

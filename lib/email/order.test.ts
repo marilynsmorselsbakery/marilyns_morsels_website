@@ -56,6 +56,10 @@ describe("order notification emails", () => {
     expect(content.business.text).toContain("customer@example.com");
     expect(content.business.text).toContain("5014 <Blendon> Ravine Ct");
     expect(content.business.text).toContain("$68.49 USD");
+    expect(content.business.text).toContain("DELIVERY ADDRESS");
+    expect(content.business.text).not.toContain("SHIP TO");
+    expect(content.business.html).toContain("Delivery address");
+    expect(content.business.html).not.toContain("Ship to");
 
     expect(content.customer.subject).toContain("We received your order");
     expect(content.customer.text).toContain("2 × Old Fashion Chocolate Chip — Dozen");

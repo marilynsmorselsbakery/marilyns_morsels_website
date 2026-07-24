@@ -1,6 +1,6 @@
 # Marilyn's Morsels Bakery
 
-> Marilyn's Morsels Bakery is a small-batch home bakery in Westerville, Ohio, specializing in fresh-baked cookies and cookie dough. Orders are available online for local delivery within approximately 10 miles of Westerville and nationwide shipping (cookies only). The bakery is family-run by Marilyn, whose recipes have been perfected over decades of baking for family, friends, and neighbors. Contact: marilynsmorselsbakery@gmail.com
+> Marilyn's Morsels Bakery is a small-batch home bakery in Westerville, Ohio, specializing in fresh-baked cookies and cookie dough. Orders are available online for local delivery in the Westerville area. Customers outside the area should contact the bakery before ordering. The bakery is family-run by Marilyn, whose recipes have been perfected over decades of baking for family, friends, and neighbors. Contact: marilynsmorselsbakery@gmail.com
 
 ## About
 
@@ -26,7 +26,7 @@ For large-quantity orders for events, corporate gifts, or special occasions.
 
 ## FAQ
 
-Common questions about ordering, shipping, freshness, allergens, and storage.
+Common questions about ordering, local delivery, freshness, allergens, and storage.
 - https://marilynsmorsels.com/faq
 
 ## Contact
@@ -34,9 +34,9 @@ Common questions about ordering, shipping, freshness, allergens, and storage.
 Email: marilynsmorselsbakery@gmail.com
 - https://marilynsmorsels.com/contact
 
-## Shipping & Returns
+## Delivery & Returns
 
-- Shipping policy: https://marilynsmorsels.com/shipping
+- Delivery policy: https://marilynsmorsels.com/shipping
 - Returns policy: https://marilynsmorsels.com/returns
 
 ## Legal

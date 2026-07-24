@@ -6,7 +6,7 @@ import ProductSchema from "@/components/ProductSchema";
 export const metadata: Metadata = {
   title: "Shop Fresh-Baked Cookies & Cookie Dough",
   description:
-    "Order small-batch cookies and cookie dough from Marilyn's home kitchen in Westerville, Ohio. Available in half-dozen, dozen, and larger sizes. Local delivery and nationwide cookie shipping.",
+    "Order small-batch cookies and cookie dough from Marilyn's home kitchen in Westerville, Ohio. Available in half-dozen, dozen, and larger sizes for local delivery in the Westerville area.",
   openGraph: {
     title: "Shop — Marilyn's Morsels Bakery",
     description:

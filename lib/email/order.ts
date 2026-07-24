@@ -128,7 +128,7 @@ Email: ${order.customer.email}
 ITEMS TO MAKE
 ${itemsText}
 
-SHIP TO
+DELIVERY ADDRESS
 ${addressText}
 
 TOTAL: ${total}
@@ -145,7 +145,7 @@ Reply to this email to contact the customer.`;
       order.customer.name
     )}<br><a href="mailto:${escapeHtml(order.customer.email)}">${escapeHtml(
       order.customer.email
-    )}</a></p><h2 style="font-size:18px;margin-top:26px">Ship to</h2><p>${addressHtml}</p><p style="font-size:20px;margin-top:26px"><strong>Total: ${escapeHtml(
+    )}</a></p><h2 style="font-size:18px;margin-top:26px">Delivery address</h2><p>${addressHtml}</p><p style="font-size:20px;margin-top:26px"><strong>Total: ${escapeHtml(
       total
     )}</strong></p><p style="color:#72533f">Reply to this email to contact the customer.</p>`
   );

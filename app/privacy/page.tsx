@@ -40,7 +40,7 @@ export default function PrivacyPage() {
               via our site. Stored in Supabase.
             </li>
             <li>
-              <strong>Order and payment information</strong> — name, email, and shipping address
+              <strong>Order and payment information</strong> — name, email, and delivery address
               collected at checkout and processed by Stripe. We do not store your full credit
               card number; Stripe handles payment processing directly.
             </li>

@@ -31,7 +31,7 @@ export const metadata = {
     template: "%s | Marilyn's Morsels Bakery",
   },
   description:
-    "Small-batch cookies and cookie dough baked fresh in Marilyn's home kitchen in Westerville, Ohio. Order online for local delivery or nationwide shipping.",
+    "Small-batch cookies and cookie dough baked fresh in Marilyn's home kitchen in Westerville, Ohio. Order online for local delivery in the Westerville area.",
   metadataBase: new URL("https://marilynsmorsels.com"),
   openGraph: {
     siteName: "Marilyn's Morsels Bakery",

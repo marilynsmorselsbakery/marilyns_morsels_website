@@ -36,7 +36,7 @@ export default function SuccessPage() {
           </li>
           <li className="flex items-start gap-2">
             <span className="text-morselGold mt-1">•</span>
-            <span>Your cookies will be baked fresh and shipped within 2-3 business days</span>
+            <span>We&apos;ll contact you by email to coordinate local delivery</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-morselGold mt-1">•</span>

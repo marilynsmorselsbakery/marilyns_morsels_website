@@ -1,26 +1,26 @@
 import type { Metadata } from "next";
+import { FULFILLMENT_POLICY } from "@/lib/storefront/fulfillment";
 
 export const metadata: Metadata = {
   title: "Frequently Asked Questions",
   description:
-    "Common questions about Marilyn's Morsels Bakery — ordering, shipping, freshness, allergens, local pickup, storage, and more.",
+    "Common questions about Marilyn's Morsels Bakery — ordering, local delivery, freshness, allergens, storage, and more.",
 };
 
 const faqs = [
   {
     question: "Where are you located?",
-    answer:
-      "We're a licensed home bakery in Westerville, Ohio. We don't have a walk-in storefront — all orders are placed online and fulfilled via local delivery or nationwide shipping.",
+    answer: `We're a licensed home bakery in Westerville, Ohio. We don't have a walk-in storefront — orders are placed online and fulfilled through local delivery in the ${FULFILLMENT_POLICY.serviceArea}.`,
   },
   {
-    question: "How do you ship cookies?",
+    question: "Do you deliver outside the Westerville area?",
     answer:
-      "We ship baked cookies nationwide via USPS or UPS. Cookies are carefully packaged to arrive fresh. Cookie dough is not available for nationwide shipping because it's perishable. Orders typically ship within 2–4 business days of payment.",
+      "Delivery is currently limited to the Westerville area. If your address is outside the area, please contact us before ordering.",
   },
   {
-    question: "Can I pick up locally instead of having them shipped?",
+    question: "How is local delivery arranged?",
     answer:
-      "Yes! We offer local delivery within approximately 10 miles of Westerville, Ohio. After placing your order, we'll contact you by email to arrange a delivery time. We don't offer in-person pickup from our home — local delivery is the equivalent.",
+      "After your order is placed, Marilyn will contact you by email to coordinate local delivery.",
   },
   {
     question: "How long do cookies stay fresh?",
@@ -55,7 +55,7 @@ const faqs = [
   {
     question: "How quickly can you fulfill a large order?",
     answer:
-      "For standard orders, please allow 2–4 business days. For large or bulk orders, lead time depends on quantity and timing — typically 5–10 business days. Submit your request through our Bulk Orders page as early as possible so we can plan accordingly.",
+      "Lead time depends on the quantity and event date. Submit your request through our Bulk Orders page as early as possible, and Marilyn will confirm timing with your quote.",
   },
 ];
 

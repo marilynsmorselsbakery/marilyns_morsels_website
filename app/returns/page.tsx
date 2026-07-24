@@ -13,7 +13,7 @@ export default function ReturnsPage() {
       <h1 className="text-3xl md:text-4xl font-display font-bold text-morselCocoa mb-6">
         Returns &amp; Refund Policy
       </h1>
-      <p className="text-sm text-morselBrown/60 mb-10">Last updated: April 23, 2026</p>
+      <p className="text-sm text-morselBrown/60 mb-10">Last updated: July 24, 2026</p>
 
       <div className="space-y-10 text-morselBrown/80 leading-relaxed">
         <div>
@@ -22,7 +22,7 @@ export default function ReturnsPage() {
           </h2>
           <p>
             Because our products are fresh-baked perishable food items, we generally do not
-            accept returns or issue refunds once an order has been delivered or shipped.
+            accept returns or issue refunds once an order has been delivered.
           </p>
         </div>
 
@@ -62,12 +62,11 @@ export default function ReturnsPage() {
 
         <div>
           <h2 className="text-xl font-display font-semibold text-morselCocoa mb-3">
-            Shipping Delays
+            Delivery Issues
           </h2>
           <p>
-            We are not responsible for delays caused by the shipping carrier once an order has
-            been handed off. If your order is significantly delayed and perishability is a
-            concern, contact us and we will do our best to help.
+            If a delivery issue affects the freshness or condition of your order, contact us and
+            we will do our best to help.
           </p>
         </div>
 

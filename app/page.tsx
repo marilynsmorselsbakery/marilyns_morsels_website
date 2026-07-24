@@ -7,7 +7,7 @@ import HomeCTASection from "./HomeCTASection";
 export const metadata: Metadata = {
   title: "Marilyn's Morsels Bakery — Fresh-Baked Cookies from Westerville, OH",
   description:
-    "Small-batch cookies and cookie dough baked fresh in Marilyn's home kitchen in Westerville, Ohio. Order online for local delivery or nationwide shipping.",
+    "Small-batch cookies and cookie dough baked fresh in Marilyn's home kitchen in Westerville, Ohio. Order online for local delivery in the Westerville area.",
   openGraph: {
     title: "Marilyn's Morsels Bakery — Fresh-Baked Cookies from Westerville, OH",
     description:
@@ -41,7 +41,7 @@ const localBusinessSchema = {
   priceRange: "$",
   servesCuisine: "Bakery",
   description:
-    "Home bakery in Westerville, Ohio offering small-batch cookies and cookie dough. Order online for local delivery or nationwide cookie shipping.",
+    "Home bakery in Westerville, Ohio offering small-batch cookies and cookie dough for local delivery in the Westerville area.",
 };
 
 export default function HomePage() {

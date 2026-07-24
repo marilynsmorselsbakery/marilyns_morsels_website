@@ -3,17 +3,20 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import toast from "react-hot-toast";
 import { useCart } from "@/components/CartProvider";
 import { getProductImage } from "@/lib/product-images";
 import { track } from "@/lib/analytics/client";
 import { getAnalyticsContext } from "@/lib/analytics/consent";
 import { cartAnalyticsItem, ecommerceValue } from "@/lib/analytics/items";
+import { checkoutFulfillmentSummary } from "@/lib/storefront/fulfillment";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, totalCents, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
+  const fulfillment = checkoutFulfillmentSummary();
 
   useEffect(() => {
     // Guest checkout — no login required. Just redirect if cart is empty.
@@ -123,8 +126,8 @@ export default function CheckoutPage() {
                 <span>${(totalCents / 100).toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-morselBrown/70">Shipping</span>
-                <span className="text-morselBrown/70">Calculated at checkout</span>
+                <span className="text-morselBrown/70">{fulfillment.label}</span>
+                <span className="text-right text-morselBrown/70">{fulfillment.detail}</span>
               </div>
               <div className="border-t border-morselGold/20 pt-3">
                 <div className="flex justify-between font-semibold text-lg">
@@ -133,6 +136,13 @@ export default function CheckoutPage() {
                 </div>
               </div>
             </div>
+            <p className="mb-5 text-xs leading-relaxed text-morselBrown/70">
+              Orders are currently available for delivery in the Westerville area only. Outside
+              the area?{" "}
+              <Link href="/contact" className="font-medium text-morselGold hover:underline">
+                Contact us before ordering.
+              </Link>
+            </p>
             <button
               onClick={handleCheckout}
               disabled={isProcessing}
