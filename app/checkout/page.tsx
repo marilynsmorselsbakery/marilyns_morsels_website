@@ -14,16 +14,16 @@ import { checkoutFulfillmentSummary } from "@/lib/storefront/fulfillment";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, totalCents, clearCart } = useCart();
+  const { items, totalCents, clearCart, hasRestoredCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const fulfillment = checkoutFulfillmentSummary();
 
   useEffect(() => {
-    // Guest checkout — no login required. Just redirect if cart is empty.
-    if (items.length === 0) {
+    // The empty hydration snapshot is not the customer's restored cart.
+    if (hasRestoredCart && items.length === 0) {
       router.push("/shop");
     }
-  }, [items, router]);
+  }, [items, router, hasRestoredCart]);
 
   const handleCheckout = async () => {
     setIsProcessing(true);
@@ -69,7 +69,7 @@ export default function CheckoutPage() {
     }
   };
 
-  if (items.length === 0) {
+  if (!hasRestoredCart || items.length === 0) {
     return null;
   }
 

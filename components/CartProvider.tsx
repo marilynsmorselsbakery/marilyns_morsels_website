@@ -31,6 +31,7 @@ export function cartRowKey(item: Pick<CartItem, "sku" | "halfHalfChoices">): str
 
 type CartContextValue = {
   items: CartItem[];
+  hasRestoredCart: boolean;
   itemCount: number;
   totalCents: number;
   addItem: (
@@ -94,11 +95,23 @@ const saveCartToStorage = (items: CartItem[]) => {
 };
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => loadCartFromStorage());
+  // Server and first client render must agree, even when a saved cart exists.
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [hasRestoredCart, setHasRestoredCart] = useState(false);
 
   useEffect(() => {
-    saveCartToStorage(items);
-  }, [items]);
+    // localStorage is an external, browser-only source. One post-mount render
+    // is intentional so hydration uses the server's empty cart snapshot.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setItems(loadCartFromStorage());
+    setHasRestoredCart(true);
+  }, []);
+
+  useEffect(() => {
+    // Use state, not a ref: mount effects (including Strict Mode replay) still
+    // see false, so the initial empty render cannot overwrite the saved cart.
+    if (hasRestoredCart) saveCartToStorage(items);
+  }, [items, hasRestoredCart]);
 
   const addItem = useCallback(
     (
@@ -174,6 +187,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const value: CartContextValue = {
     items,
+    hasRestoredCart,
     itemCount,
     totalCents,
     addItem,
