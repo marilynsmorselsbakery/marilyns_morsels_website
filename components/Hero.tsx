@@ -45,7 +45,7 @@ export default function Hero() {
             />
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-bold leading-tight mb-4 md:mb-6 text-white drop-shadow-lg [text-shadow:0_2px_8px_rgba(0,0,0,0.3)]">
-            Small batch cookies,{" "}
+            Small-batch cookies,{" "}
             <span className="text-morselGoldLight [text-shadow:0_2px_8px_rgba(0,0,0,0.4)]">still warm in spirit.</span>
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-white/95 mb-6 md:mb-8 font-body max-w-xl drop-shadow-md [text-shadow:0_1px_4px_rgba(0,0,0,0.3)]">
